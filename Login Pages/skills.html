@@ -1,0 +1,366 @@
+Here is the fully responsive, matches-your-theme **Technical Skills** section complete with the dynamic filter logic script embedded directly into it.
+
+I populated the skills based on the tech stack mentioned across your experience and project components (React, Node, Express, MongoDB, ESP32, Arduino, C++, Flutter, Vercel, Git, etc.).
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2035 Hyper-Quantum Skills Ecosystem</title>
+    <style>
+        :root {
+            --bg-color: #030307;
+            --glass-bg: rgba(10, 10, 20, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-primary: #00f2fe;
+            --glow-accent: #7f00ff;
+            --glow-tertiary: #ff007f;
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --noise-svg: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- SKILLS SECTION --- */
+        #skills {
+            width: 100%;
+            padding: 120px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+        }
+
+        .section-inner {
+            max-width: 1320px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--glow-primary);
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 48px;
+            background: linear-gradient(180deg, #ffffff 30%, #a2a2a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- FILTER CONTROLS TRAY --- */
+        .skills-cats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .skill-cat {
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skill-cat:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .skill-cat.active {
+            color: #ffffff;
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--glow-primary);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- SKILLS SYSTEM ECO-GRID --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* --- SKILL ITEM MICRO-ARCH --- */
+        .skill-item {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transition: 
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.3s ease, 
+                visibility 0.3s ease;
+        }
+
+        /* Noise microtexture override */
+        .skill-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background-image: var(--noise-svg);
+            opacity: 0.01;
+            pointer-events: none;
+        }
+
+        .skill-item:hover {
+            transform: scale3d(1.03, 1.03, 1.03) translateZ(10px);
+            border-color: var(--glow-primary);
+            box-shadow: 0 15px 30px rgba(0, 242, 254, 0.1), 0 0 1px var(--glow-primary);
+        }
+
+        /* Context Color Coding adjustments based on layout indexes */
+        .skill-item[data-cat="backend"]:hover { border-color: var(--glow-accent); box-shadow: 0 15px 30px rgba(127, 0, 255, 0.1), 0 0 1px var(--glow-accent); }
+        .skill-item[data-cat="hardware"]:hover { border-color: var(--glow-tertiary); box-shadow: 0 15px 30px rgba(255, 0, 127, 0.1), 0 0 1px var(--glow-tertiary); }
+        .skill-item[data-cat="tools"]:hover { border-color: #ffb800; box-shadow: 0 15px 30px rgba(255, 184, 0, 0.1), 0 0 1px #ffb800; }
+
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .skill-level {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- ANIMATED STATE HIDDEN CLASSES --- */
+        .skill-item.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale3d(0.8, 0.8, 0.8) translateZ(0);
+            position: absolute;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+            padding: 0;
+            border: none;
+            margin: 0;
+        }
+
+        /* --- THE DYNAMIC DIVIDER ANCHOR --- */
+        .divider {
+            max-width: 1320px;
+            height: 1px;
+            margin: 60px auto 0 auto;
+            position: relative;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08) 20%, rgba(255, 255, 255, 0.08) 80%, transparent);
+        }
+
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--glow-tertiary), var(--glow-primary), transparent);
+            transform: translateX(-50%);
+            filter: blur(1px);
+        }
+
+        /* --- RESPONSIVE ADAPTATION --- */
+        @media (max-width: 768px) {
+            #skills { padding: 80px 16px; }
+            .section-title { margin-bottom: 32px; }
+            .skills-cats { gap: 8px; margin-bottom: 32px; }
+            .skill-cat { padding: 8px 16px; font-size: 0.82rem; border-radius: 10px; }
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+            .skill-item { padding: 18px; border-radius: 14px; }
+            .skill-name { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="skills">
+        <div class="section-inner">
+            <div class="section-tag">Technical Skills</div>
+            <h2 class="section-title fade-up">My Tech Ecosystem</h2>
+            
+            <!-- Filters Tray Anchor -->
+            <div class="skills-cats fade-up">
+                <div class="skill-cat active" onclick="filterSkills('all', this)">All</div>
+                <div class="skill-cat" onclick="filterSkills('frontend', this)">Frontend</div>
+                <div class="skill-cat" onclick="filterSkills('backend', this)">Backend</div>
+                <div class="skill-cat" onclick="filterSkills('hardware', this)">Hardware</div>
+                <div class="skill-cat" onclick="filterSkills('tools', this)">Tools</div>
+            </div>
+            
+            <!-- Core Matrix Grid -->
+            <div class="skills-grid" id="skills-grid">
+                
+                <!-- Frontend -->
+                <div class="skill-item" data-cat="frontend">
+                    <span class="skill-name">React</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="frontend">
+                    <span class="skill-name">Vite</span>
+                    <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-item" data-cat="frontend">
+                    <span class="skill-name">Tailwind CSS</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="frontend">
+                    <span class="skill-name">Flutter</span>
+                    <span class="skill-level">Intermediate</span>
+                </div>
+                <div class="skill-item" data-cat="frontend">
+                    <span class="skill-name">JavaScript</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+
+                <!-- Backend -->
+                <div class="skill-item" data-cat="backend">
+                    <span class="skill-name">Node.js</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="backend">
+                    <span class="skill-name">Express.js</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="backend">
+                    <span class="skill-name">MongoDB</span>
+                    <span class="skill-level">Intermediate</span>
+                </div>
+                <div class="skill-item" data-cat="backend">
+                    <span class="skill-name">REST APIs</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+
+                <!-- Hardware & Embedded Systems -->
+                <div class="skill-item" data-cat="hardware">
+                    <span class="skill-name">ESP32 / C3</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="hardware">
+                    <span class="skill-name">LoRa / Mesh</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="hardware">
+                    <span class="skill-name">Arduino Assembly</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="hardware">
+                    <span class="skill-name">C++ / C</span>
+                    <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-item" data-cat="hardware">
+                    <span class="skill-name">BLE Protocol</span>
+                    <span class="skill-level">Intermediate</span>
+                </div>
+
+                <!-- Tools & Gateways -->
+                <div class="skill-item" data-cat="tools">
+                    <span class="skill-name">Git / GitHub</span>
+                    <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-item" data-cat="tools">
+                    <span class="skill-name">Razorpay SDK</span>
+                    <span class="skill-level">Integrated</span>
+                </div>
+                <div class="skill-item" data-cat="tools">
+                    <span class="skill-name">Cloudflare</span>
+                    <span class="skill-level">Configured</span>
+                </div>
+                <div class="skill-item" data-cat="tools">
+                    <span class="skill-name">Vercel / Render</span>
+                    <span class="skill-level">DevOps</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Unified Spatial Separation Axis -->
+    <div class="divider"></div>
+
+    <!-- Micro-Script Execution Array for Real-Time Sorting Routing -->
+    <script>
+        function filterSkills(category, element) {
+            // Un-assign previous active classes
+            document.querySelectorAll('.skill-cat').forEach(cat => {
+                cat.classList.remove('active');
+            });
+            // Assign active target state
+            element.classList.add('active');
+
+            // Evaluate Matrix visibility mapping
+            const items = document.querySelectorAll('.skill-item');
+            items.forEach(item => {
+                const targetCat = item.getAttribute('data-cat');
+                if (category === 'all' || targetCat === category) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+```

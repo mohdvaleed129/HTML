@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <title>Responsive Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebarw-96% bg-black text-white h-screen p-5 fixed transform -translate-x-full md:translate-x-0 m-0-auto grid-cols-1">
+        
+        <h1 class="text-2xl font-bold mb-5">Dashboard</h1>
+        <hr class="border-gray-700 border-2 mb-5">
+        <ul>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        desktop_windows
+                        </span>
+                    Dashboard
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        calendar_month
+                        </span>
+                    Tables
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        payment
+                        </span>
+                    Biling
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        token
+                        </span>
+                    Virtual Reality
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        language
+                        </span>
+                        RTL
+                </a>
+            </li>
+            <p class="p-4 text-sm text-gray-500">ACCOUNT PAGES</p>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        person
+                        </span>
+                    Profile
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        login
+                        </span>
+                    Sign In
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded">
+                    <span class="material-icons-sharp pr-3">
+                        logout
+                        </span>
+                        Sign Up
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    
+    <script>
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>

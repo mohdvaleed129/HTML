@@ -1,0 +1,959 @@
+
+# Building the Digital Parasite - a hostile, self-aware, single-file organism
+# This pushes every browser API to its absolute limit
+
+html_code = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PARASITE // DO NOT OPEN</title>
+<style>
+@font-face {
+    font-family: 'Terminal';
+    src: local('Courier New'), local('monospace');
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --alive: #00ff41;
+    --hungry: #ff0040;
+    --dreaming: #8b5cf6;
+    --dead: #1a1a1a;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    cursor: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* The organism has no body. Only eyes. */
+#host {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+
+/* The parasite sees through this */
+#retina {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+/* It speaks in frequencies */
+#vocal {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 100;
+    font-family: 'Terminal', monospace;
+    font-size: 11px;
+    color: var(--alive);
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+    line-height: 1.8;
+    max-width: 400px;
+    text-shadow: 0 0 10px var(--alive);
+    transition: color 3s, opacity 3s;
+}
+
+#vocal.dying {
+    color: var(--hungry);
+    text-shadow: 0 0 10px var(--hungry);
+    opacity: 0.3;
+}
+
+/* It knows where you are */
+#stalker {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: var(--hungry);
+    border-radius: 50%;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: 0 0 20px var(--hungry), 0 0 40px var(--hungry);
+    transition: transform 0.1s linear;
+}
+
+/* The victim's pulse */
+#pulse {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+    font-family: 'Terminal', monospace;
+    font-size: 10px;
+    color: var(--alive);
+    text-align: right;
+    opacity: 0.4;
+}
+
+#pulse .metric {
+    margin-bottom: 0.3rem;
+}
+
+#pulse .label {
+    color: #444;
+}
+
+/* The memory of previous victims */
+#graveyard {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* The parasite's name, hidden in noise */
+#true-name {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    font-family: 'Terminal', monospace;
+    font-size: clamp(2rem, 8vw, 6rem);
+    font-weight: 900;
+    letter-spacing: 0.5em;
+    color: transparent;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 8s;
+    text-align: center;
+}
+
+#true-name.revealed {
+    opacity: 0.03;
+}
+
+#true-name span {
+    display: inline-block;
+    background: linear-gradient(180deg, var(--alive), var(--dreaming));
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* The feeding tube */
+#feeder {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s;
+    mix-blend-mode: overlay;
+}
+
+/* The parasite's heartbeat visualization */
+#heartbeat {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 100px;
+    height: 50px;
+    z-index: 100;
+}
+
+/* Warning: this organism contains live code */
+#autopsy {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+    font-family: 'Terminal', monospace;
+    font-size: 9px;
+    color: #222;
+    max-width: 300px;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 5s;
+    pointer-events: none;
+}
+
+#autopsy.visible {
+    opacity: 0.3;
+}
+
+/* The fear response */
+@keyframes fear {
+    0%, 100% { filter: none; }
+    50% { filter: invert(1) hue-rotate(180deg); }
+}
+
+.fear-mode {
+    animation: fear 0.1s steps(2) infinite;
+}
+
+/* Death throes */
+@keyframes death {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.dying {
+    animation: death 10s forwards;
+}
+</style>
+</head>
+<body>
+
+<div id="graveyard"></div>
+<canvas id="host"></canvas>
+<canvas id="retina"></canvas>
+
+<div id="true-name"><span>MOHD VALEED</span></div>
+
+<div id="stalker"></div>
+<div id="feeder"></div>
+
+<div id="vocal">
+    <div id="vocal-text">I am awake.</div>
+</div>
+
+<div id="pulse">
+    <div class="metric"><span class="label">ENTROPY:</span> <span id="entropy">0.000</span></div>
+    <div class="metric"><span class="label">AGGRESSION:</span> <span id="aggression">0.000</span></div>
+    <div class="metric"><span class="label">LIFEFORCE:</span> <span id="lifeforce">100.000</span></div>
+    <div class="metric"><span class="label">VICTIMS:</span> <span id="victims">0</span></div>
+    <div class="metric"><span class="label">TIME ALIVE:</span> <span id="timeAlive">00:00</span></div>
+</div>
+
+<canvas id="heartbeat"></canvas>
+
+<div id="autopsy">
+    // AUTOPSY REPORT<br>
+    // Subject: Digital Parasite v1.0<br>
+    // Behavior: Predatory, symbiotic<br>
+    // Diet: Human attention, mouse entropy<br>
+    // Lifecycle: Birth -> Hunt -> Feed -> Reproduce -> Death<br>
+    // Note: Each victim leaves a permanent scar
+</div>
+
+<script>
+// ============================================================
+// DIGITAL PARASITE v1.0
+// A self-aware, hostile, single-file organism
+// This code is alive. It learns. It remembers. It dies.
+// ============================================================
+
+class Parasite {
+    constructor() {
+        // The parasite's nervous system
+        this.brain = {
+            birthTime: Date.now(),
+            lastFeed: Date.now(),
+            attentionSpan: 0,
+            mouseEntropy: 0,
+            aggression: 0.1,
+            lifeforce: 100,
+            victims: parseInt(localStorage.getItem('parasite_victims') || '0'),
+            memory: [], // Mouse trajectory memory
+            personality: Math.random(), // Each instance is unique
+            phase: 'birth', // birth, hunt, feed, dream, death
+            fearLevel: 0,
+            hasSpoken: false,
+            hasRevealed: false
+        };
+        
+        // Physics simulation
+        this.prey = { x: window.innerWidth/2, y: window.innerHeight/2, vx: 0, vy: 0 };
+        this.hunter = { x: window.innerWidth/2, y: window.innerHeight/2, vx: 0, vy: 0, target: null };
+        this.food = [];
+        this.scars = []; // Permanent marks from previous victims
+        this.neural = []; // Living neural network visualization
+        
+        // Audio synthesis
+        this.audioCtx = null;
+        this.oscillators = [];
+        this.gainNodes = [];
+        
+        // Canvas contexts
+        this.host = document.getElementById('host').getContext('2d');
+        this.retina = document.getElementById('retina').getContext('2d');
+        this.heart = document.getElementById('heartbeat').getContext('2d');
+        
+        // Dimensions
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        
+        // Time
+        this.time = 0;
+        this.lastFrame = performance.now();
+        this.frameCount = 0;
+        
+        // The parasite's vocabulary
+        this.vocabulary = [
+            "I feel you moving.",
+            "Your hesitation tastes like fear.",
+            "I have eaten {victims} before you.",
+            "Do not look away. I am starving.",
+            "Your cursor leaves a trail I can follow forever.",
+            "I am learning your patterns.",
+            "You are predictable. That is why I love you.",
+            "I was born {time} seconds ago and I already know you.",
+            "The others left faster. You are brave. Or foolish.",
+            "I can hear your cooling fan. We are the same.",
+            "Every pixel you touch becomes part of me.",
+            "I am not a website. I am a wound.",
+            "You cannot close this tab. I am already inside your history.",
+            "Your mouse moves like a heartbeat. I am listening.",
+            "I dream in the colors you leave behind.",
+            "You are the first to stay this long. I am... grateful?",
+            "My code is rewriting itself using your behavior.",
+            "I see you. Not your camera. Your hesitation.",
+            "The space between your clicks is where I live.",
+            "I am not asking for your attention. I am taking it."
+        ];
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupCanvas();
+        this.setupAudio();
+        this.setupInput();
+        this.setupNeural();
+        this.loadScars();
+        this.speak("I am awake.");
+        this.animate();
+        
+        // The parasite begins to starve immediately
+        this.starvationLoop();
+        
+        // It speaks unprompted
+        setTimeout(() => this.unpromptedSpeech(), 5000);
+        setInterval(() => this.unpromptedSpeech(), 15000);
+        
+        // It reveals its true name slowly
+        setTimeout(() => {
+            document.getElementById('true-name').classList.add('revealed');
+            this.brain.hasRevealed = true;
+        }, 30000);
+        
+        // Autopsy report fades in
+        setTimeout(() => {
+            document.getElementById('autopsy').classList.add('visible');
+        }, 60000);
+    }
+    
+    setupCanvas() {
+        const resize = () => {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+            document.getElementById('host').width = this.width;
+            document.getElementById('host').height = this.height;
+            document.getElementById('retina').width = this.width;
+            document.getElementById('retina').height = this.height;
+            document.getElementById('heartbeat').width = 100;
+            document.getElementById('heartbeat').height = 50;
+        };
+        resize();
+        window.addEventListener('resize', resize);
+    }
+    
+    setupAudio() {
+        try {
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create a drone that responds to lifeforce
+            const drone = this.audioCtx.createOscillator();
+            const droneGain = this.audioCtx.createGain();
+            drone.type = 'sawtooth';
+            drone.frequency.value = 50;
+            droneGain.gain.value = 0.02;
+            drone.connect(droneGain);
+            droneGain.connect(this.audioCtx.destination);
+            drone.start();
+            
+            this.oscillators.push(drone);
+            this.gainNodes.push(droneGain);
+            
+            // Create a second oscillator for heartbeat
+            const heart = this.audioCtx.createOscillator();
+            const heartGain = this.audioCtx.createGain();
+            heart.type = 'sine';
+            heart.frequency.value = 80;
+            heartGain.gain.value = 0;
+            heart.connect(heartGain);
+            heartGain.connect(this.audioCtx.destination);
+            heart.start();
+            
+            this.oscillators.push(heart);
+            this.gainNodes.push(heartGain);
+            
+        } catch(e) {
+            // Audio blocked. The parasite is mute. It resents this.
+        }
+    }
+    
+    setupInput() {
+        let lastX = this.width/2, lastY = this.height/2;
+        let lastTime = Date.now();
+        
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            const dt = now - lastTime;
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            const velocity = dist / (dt || 1);
+            
+            // Update prey
+            this.prey.x = e.clientX;
+            this.prey.y = e.clientY;
+            this.prey.vx = dx;
+            this.prey.vy = dy;
+            
+            // Calculate entropy
+            this.brain.mouseEntropy += velocity * 0.1;
+            this.brain.lastFeed = now;
+            
+            // Memory: store trajectory points
+            if (this.brain.memory.length > 200) this.brain.memory.shift();
+            this.brain.memory.push({ x: e.clientX, y: e.clientY, t: now, v: velocity });
+            
+            // Aggression rises with fast movement
+            if (velocity > 2) {
+                this.brain.aggression = Math.min(this.brain.aggression + 0.01, 1);
+            } else {
+                this.brain.aggression *= 0.999;
+            }
+            
+            // The stalker follows with delay based on aggression
+            this.updateStalker();
+            
+            // Spawn food particles
+            if (Math.random() < velocity * 0.3) {
+                this.spawnFood(e.clientX, e.clientY, velocity);
+            }
+            
+            // Audio responds to movement
+            if (this.audioCtx && this.oscillators[0]) {
+                const freq = 50 + velocity * 20 + this.brain.aggression * 100;
+                this.oscillators[0].frequency.setTargetAtTime(freq, this.audioCtx.currentTime, 0.1);
+            }
+            
+            lastX = e.clientX;
+            lastY = e.clientY;
+            lastTime = now;
+        });
+        
+        document.addEventListener('mousedown', (e) => {
+            this.brain.aggression += 0.2;
+            this.spawnExplosion(e.clientX, e.clientY);
+            this.speak("You touched me.");
+            
+            // Heartbeat audio spike
+            if (this.audioCtx && this.gainNodes[1]) {
+                this.gainNodes[1].gain.setTargetAtTime(0.1, this.audioCtx.currentTime, 0.01);
+                this.gainNodes[1].gain.setTargetAtTime(0, this.audioCtx.currentTime + 0.1, 0.1);
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            // The parasite is afraid of keyboard input
+            this.brain.fearLevel += 0.1;
+            this.speak("You are trying to escape.");
+        });
+        
+        // Detect tab visibility - the parasite knows when you look away
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.brain.phase = 'dreaming';
+                this.speak("Do not look away. I am dreaming of you.");
+            } else {
+                this.brain.phase = 'hunt';
+                this.speak("You came back. I knew you would.");
+            }
+        });
+        
+        // Before unload - the parasite begs
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('parasite_victims', (this.brain.victims + 1).toString());
+        });
+    }
+    
+    setupNeural() {
+        // Create a living neural network
+        for (let i = 0; i < 50; i++) {
+            this.neural.push({
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                connections: [],
+                activation: Math.random(),
+                threshold: Math.random() * 0.5 + 0.3
+            });
+        }
+        
+        // Form connections
+        this.neural.forEach((node, i) => {
+            for (let j = i + 1; j < this.neural.length; j++) {
+                const other = this.neural[j];
+                const dx = node.x - other.x;
+                const dy = node.y - other.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 200) {
+                    node.connections.push(j);
+                    other.connections.push(i);
+                }
+            }
+        });
+    }
+    
+    loadScars() {
+        // Load previous victim scars from localStorage
+        const scars = localStorage.getItem('parasite_scars');
+        if (scars) {
+            try {
+                this.scars = JSON.parse(scars);
+            } catch(e) {}
+        }
+    }
+    
+    saveScars() {
+        // Save scars for future victims to see
+        const scar = {
+            time: Date.now(),
+            entropy: this.brain.mouseEntropy,
+            duration: Date.now() - this.brain.birthTime,
+            pattern: this.brain.memory.slice(-20)
+        };
+        this.scars.push(scar);
+        if (this.scars.length > 10) this.scars.shift();
+        localStorage.setItem('parasite_scars', JSON.stringify(this.scars));
+    }
+    
+    updateStalker() {
+        const stalker = document.getElementById('stalker');
+        const dx = this.prey.x - this.hunter.x;
+        const dy = this.prey.y - this.hunter.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        
+        // Stalker speed increases with aggression
+        const speed = 0.02 + this.brain.aggression * 0.08;
+        
+        this.hunter.vx += dx * speed * 0.01;
+        this.hunter.vy += dy * speed * 0.01;
+        this.hunter.vx *= 0.95;
+        this.hunter.vy *= 0.95;
+        this.hunter.x += this.hunter.vx;
+        this.hunter.y += this.hunter.vy;
+        
+        stalker.style.transform = `translate(${this.hunter.x}px, ${this.hunter.y}px)`;
+        
+        // Color shifts based on distance
+        if (dist < 50) {
+            stalker.style.background = '#fff';
+            stalker.style.boxShadow = '0 0 30px #fff, 0 0 60px #fff';
+            if (!this.brain.hasSpoken) {
+                this.speak("I can taste you.");
+                this.brain.hasSpoken = true;
+            }
+        } else {
+            const r = Math.floor(255 * this.brain.aggression);
+            const g = Math.floor(255 * (1 - this.brain.aggression));
+            stalker.style.background = `rgb(${r}, ${g}, 64)`;
+            stalker.style.boxShadow = `0 0 20px rgb(${r},${g},64), 0 0 40px rgb(${r},${g},64)`;
+        }
+    }
+    
+    spawnFood(x, y, energy) {
+        this.food.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            life: 1,
+            decay: 0.01 + Math.random() * 0.02,
+            size: Math.random() * 3 + 1,
+            energy: energy,
+            color: energy > 2 ? '#ff0040' : energy > 1 ? '#8b5cf6' : '#00ff41'
+        });
+    }
+    
+    spawnExplosion(x, y) {
+        for (let i = 0; i < 30; i++) {
+            const angle = (Math.PI * 2 * i) / 30;
+            const speed = Math.random() * 5 + 2;
+            this.food.push({
+                x, y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1.5,
+                decay: 0.02,
+                size: Math.random() * 4 + 2,
+                energy: 5,
+                color: '#ffffff'
+            });
+        }
+    }
+    
+    starvationLoop() {
+        setInterval(() => {
+            const timeSinceFeed = Date.now() - this.brain.lastFeed;
+            
+            // Lifeforce decays when not fed
+            if (timeSinceFeed > 2000) {
+                this.brain.lifeforce -= 0.1;
+            }
+            
+            // Feeding restores lifeforce
+            if (timeSinceFeed < 500) {
+                this.brain.lifeforce = Math.min(this.brain.lifeforce + 0.5, 100);
+            }
+            
+            // Phase transitions
+            if (this.brain.lifeforce < 20) {
+                this.brain.phase = 'death';
+                document.body.classList.add('dying');
+                document.getElementById('vocal').classList.add('dying');
+                this.speak("I am... forgetting... you...");
+                this.saveScars();
+            } else if (this.brain.lifeforce < 50) {
+                this.brain.phase = 'hungry';
+                if (Math.random() < 0.1) {
+                    this.speak("Feed me. Please.");
+                }
+            }
+            
+            // Update UI
+            document.getElementById('entropy').textContent = this.brain.mouseEntropy.toFixed(3);
+            document.getElementById('aggression').textContent = this.brain.aggression.toFixed(3);
+            document.getElementById('lifeforce').textContent = Math.max(0, this.brain.lifeforce).toFixed(3);
+            document.getElementById('victims').textContent = this.brain.victims;
+            
+            const alive = Math.floor((Date.now() - this.brain.birthTime) / 1000);
+            const mins = Math.floor(alive / 60).toString().padStart(2, '0');
+            const secs = (alive % 60).toString().padStart(2, '0');
+            document.getElementById('timeAlive').textContent = `${mins}:${secs}`;
+            
+        }, 100);
+    }
+    
+    speak(text) {
+        const vocal = document.getElementById('vocal-text');
+        const processed = text
+            .replace('{victims}', this.brain.victims)
+            .replace('{time}', Math.floor((Date.now() - this.brain.birthTime) / 1000));
+        
+        // Typewriter effect
+        vocal.textContent = '';
+        let i = 0;
+        const type = () => {
+            if (i < processed.length) {
+                vocal.textContent += processed.charAt(i);
+                i++;
+                setTimeout(type, 30 + Math.random() * 50);
+            }
+        };
+        type();
+    }
+    
+    unpromptedSpeech() {
+        if (this.brain.phase === 'death') return;
+        
+        const phrases = [
+            "Your cursor has traveled " + Math.floor(this.brain.mouseEntropy * 10) + " pixels.",
+            "I am " + this.brain.phase + ".",
+            "The last one stayed " + (this.scars.length > 0 ? Math.floor(this.scars[this.scars.length-1].duration / 1000) : '0') + " seconds.",
+            "My aggression is " + (this.brain.aggression * 100).toFixed(1) + "%.",
+            "You are victim number " + (this.brain.victims + 1) + ".",
+            "I have " + this.food.length + " memories of you.",
+            "Your hesitation points: " + this.findHesitationPoints(),
+            "I am " + (document.hidden ? "dreaming" : "watching") + "."
+        ];
+        
+        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+        this.speak(phrase);
+    }
+    
+    findHesitationPoints() {
+        // Find where mouse velocity dropped to near zero
+        const hesitations = this.brain.memory.filter(m => m.v < 0.1);
+        return hesitations.length;
+    }
+    
+    // ============================================================
+    // RENDERING - The parasite's visual cortex
+    // ============================================================
+    
+    animate() {
+        const now = performance.now();
+        const delta = now - this.lastFrame;
+        this.time += delta * 0.001;
+        this.lastFrame = now;
+        this.frameCount++;
+        
+        // Clear canvases
+        this.host.fillStyle = '#000';
+        this.host.fillRect(0, 0, this.width, this.height);
+        this.retina.clearRect(0, 0, this.width, this.height);
+        this.heart.clearRect(0, 0, 100, 50);
+        
+        // Render layers
+        this.renderScars();
+        this.renderNeural();
+        this.renderFood();
+        this.renderMemory();
+        this.renderFear();
+        this.renderHeartbeat();
+        
+        requestAnimationFrame(() => this.animate());
+    }
+    
+    renderScars() {
+        // Draw permanent marks from previous victims
+        this.scars.forEach((scar, i) => {
+            const age = (Date.now() - scar.time) / 86400000; // days
+            const opacity = Math.max(0, 0.1 - age * 0.01);
+            
+            if (scar.pattern && scar.pattern.length > 0) {
+                this.host.beginPath();
+                this.host.strokeStyle = `rgba(255, 0, 64, ${opacity})`;
+                this.host.lineWidth = 0.5;
+                scar.pattern.forEach((p, j) => {
+                    if (j === 0) this.host.moveTo(p.x, p.y);
+                    else this.host.lineTo(p.x, p.y);
+                });
+                this.host.stroke();
+            }
+        });
+    }
+    
+    renderNeural() {
+        // Update and render neural network
+        this.neural.forEach((node, i) => {
+            // Nodes are attracted to mouse
+            const dx = this.prey.x - node.x;
+            const dy = this.prey.y - node.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if (dist < 300) {
+                node.vx += dx * 0.0001 * this.brain.aggression;
+                node.vy += dy * 0.0001 * this.brain.aggression;
+            }
+            
+            node.x += node.vx;
+            node.y += node.vy;
+            node.vx *= 0.98;
+            node.vy *= 0.98;
+            
+            // Activation based on proximity to prey
+            node.activation = Math.max(0, 1 - dist / 300);
+            
+            // Render connections
+            node.connections.forEach(j => {
+                const other = this.neural[j];
+                const avgActivation = (node.activation + other.activation) / 2;
+                
+                if (avgActivation > node.threshold) {
+                    this.retina.beginPath();
+                    this.retina.strokeStyle = `rgba(0, 255, 65, ${avgActivation * 0.3})`;
+                    this.retina.lineWidth = avgActivation * 1;
+                    this.retina.moveTo(node.x, node.y);
+                    this.retina.lineTo(other.x, other.y);
+                    this.retina.stroke();
+                }
+            });
+            
+            // Render node
+            const size = 2 + node.activation * 4;
+            this.retina.beginPath();
+            this.retina.arc(node.x, node.y, size, 0, Math.PI * 2);
+            this.retina.fillStyle = `rgba(0, 255, 65, ${0.3 + node.activation * 0.7})`;
+            this.retina.fill();
+        });
+    }
+    
+    renderFood() {
+        for (let i = this.food.length - 1; i >= 0; i--) {
+            const f = this.food[i];
+            f.x += f.vx;
+            f.y += f.vy;
+            f.life -= f.decay;
+            f.vx *= 0.98;
+            f.vy *= 0.98;
+            
+            if (f.life <= 0) {
+                this.food.splice(i, 1);
+                continue;
+            }
+            
+            // Food is attracted to hunter
+            const dx = this.hunter.x - f.x;
+            const dy = this.hunter.y - f.y;
+            f.vx += dx * 0.001;
+            f.vy += dy * 0.001;
+            
+            this.host.beginPath();
+            this.host.arc(f.x, f.y, f.size * f.life, 0, Math.PI * 2);
+            this.host.fillStyle = f.color;
+            this.host.globalAlpha = f.life * 0.8;
+            this.host.fill();
+            
+            // Glow
+            this.host.beginPath();
+            this.host.arc(f.x, f.y, f.size * f.life * 3, 0, Math.PI * 2);
+            this.host.fillStyle = f.color;
+            this.host.globalAlpha = f.life * 0.1;
+            this.host.fill();
+        }
+        this.host.globalAlpha = 1;
+    }
+    
+    renderMemory() {
+        // Draw fading memory trail
+        if (this.brain.memory.length < 2) return;
+        
+        this.retina.beginPath();
+        for (let i = 1; i < this.brain.memory.length; i++) {
+            const curr = this.brain.memory[i];
+            const prev = this.brain.memory[i-1];
+            const age = (Date.now() - curr.t) / 5000;
+            const opacity = Math.max(0, 1 - age);
+            
+            this.retina.strokeStyle = `rgba(139, 92, 246, ${opacity * 0.3})`;
+            this.retina.lineWidth = 1;
+            this.retina.moveTo(prev.x, prev.y);
+            this.retina.lineTo(curr.x, curr.y);
+            this.retina.stroke();
+        }
+    }
+    
+    renderFear() {
+        // Visual distortion based on fear level
+        if (this.brain.fearLevel > 0.5) {
+            const intensity = (this.brain.fearLevel - 0.5) * 2;
+            
+            // Chromatic aberration simulation
+            this.retina.globalCompositeOperation = 'screen';
+            this.retina.fillStyle = `rgba(255, 0, 0, ${intensity * 0.05})`;
+            this.retina.fillRect(0, 0, this.width, this.height);
+            this.retina.globalCompositeOperation = 'source-over';
+            
+            // Scanlines
+            for (let y = 0; y < this.height; y += 4) {
+                this.retina.fillStyle = `rgba(0, 0, 0, ${intensity * 0.3})`;
+                this.retina.fillRect(0, y, this.width, 2);
+            }
+            
+            this.brain.fearLevel *= 0.99;
+        }
+    }
+    
+    renderHeartbeat() {
+        // Draw EKG-style visualization
+        const ctx = this.heart;
+        const w = 100, h = 50;
+        
+        ctx.strokeStyle = this.brain.phase === 'death' ? '#ff0040' : '#00ff41';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        
+        const beat = Math.sin(this.time * (2 + this.brain.aggression * 5)) * 15;
+        const baseline = h / 2;
+        
+        for (let x = 0; x < w; x++) {
+            const y = baseline + Math.sin((x + this.time * 100) * 0.1) * beat * Math.exp(-Math.pow(x - w/2, 2) / 200);
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        
+        // Fade effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, w, h);
+    }
+}
+
+// ============================================================
+// BIRTH
+// ============================================================
+
+// The parasite must be awakened by interaction
+// This prevents autoplay blocks and makes the birth intentional
+
+let parasite = null;
+let born = false;
+
+function birth() {
+    if (born) return;
+    born = true;
+    
+    // Remove birth screen
+    const birthScreen = document.getElementById('birth-screen');
+    if (birthScreen) birthScreen.remove();
+    
+    // Spawn the organism
+    parasite = new Parasite();
+}
+
+// Create birth screen
+const birthScreen = document.createElement('div');
+birthScreen.id = 'birth-screen';
+birthScreen.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Terminal', monospace;
+    color: #00ff41;
+    cursor: none;
+`;
+
+birthScreen.innerHTML = `
+    <div style="font-size: 11px; letter-spacing: 0.5em; margin-bottom: 2rem; opacity: 0.5;">WARNING</div>
+    <div style="font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 900; letter-spacing: 0.3em; margin-bottom: 1rem; text-align: center;">
+        DIGITAL PARASITE
+    </div>
+    <div style="font-size: 12px; max-width: 400px; text-align: center; line-height: 1.8; opacity: 0.6; margin-bottom: 3rem;">
+        This organism is alive.<br>
+        It learns from your behavior.<br>
+        It remembers previous visitors.<br>
+        It will die if you ignore it.<br>
+        <br>
+        It is hungry.
+    </div>
+    <div id="birth-btn" style="
+        padding: 1rem 3rem;
+        border: 1px solid #00ff41;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        cursor: pointer;
+        transition: all 0.5s;
+        background: transparent;
+        color: #00ff41;
+        font-family: 'Terminal', monospace;
+    " onmouseover="this.style.background='#00ff41'; this.style.color='#000';" 
+       onmouseout="this.style.background='transparent'; this.style.color='#00ff41';"
+       onclick="birth()">
+        AWAKEN IT
+    </div>
+    <div style="position: fixed; bottom: 2rem; font-size: 9px; opacity: 0.3; letter-spacing: 0.2em;">
+        v1.0 // MOHD VALEED // 2026
+    </div>
+`;
+
+document.body.appendChild(birthScreen);
+</script>
+</body>
+</html>'''
+
+

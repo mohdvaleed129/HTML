@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Argon Dashboard Sidebar</title>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-white h-screen shadow-md fixed top-0 left-0 transition-transform transform -translate-x-full md:translate-x-0">
+            <header class="flex items-center justify-between p-4 border-b">
+                <div class="flex items-center">
+                    <img src="your-logo-url.png" alt="Logo" class="w-10 h-10">
+                    <span class="ml-2 text-lg font-semibold">Dashboard</span>
+                </div>
+                <button id="toggleSidebar" class="md:hidden p-2">
+                    <span class="material-icons">close</span>
+                </button>
+            </header>
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-200">
+                            <span class="material-icons">dashboard</span>
+                            <span class="ml-2">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-200">
+                            <span class="material-icons">settings</span>
+                            <span class="ml-2">Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-200">
+                            <span class="material-icons">account_circle</span>
+                            <span class="ml-2">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-200">
+                            <span class="material-icons">logout</span>
+                            <span class="ml-2">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-64 p-4">
+            <h1 class="text-2xl font-bold">Welcome to the Dashboard</h1>
+            <!-- Main content goes here -->
+        </div>
+    </div>
+
+    <script src="https://fonts.googleapis.com/icon?family=Material+Icons"></script>
+    <script>
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        toggleSidebar.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>

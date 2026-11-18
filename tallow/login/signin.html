@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup - Tallow & Care</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+/* BODY */
+
+body{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#ffffff;
+color:#1f2933;
+padding:20px;
+}
+
+/* CARD */
+
+.container{
+width:100%;
+max-width:460px;
+padding:45px 40px;
+border-radius:18px;
+background:#ffffff;
+border:1px solid #e5e7eb;
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+
+h2{
+font-size:26px;
+margin-bottom:6px;
+font-weight:600;
+color:#2c5016;
+}
+
+.subtitle{
+font-size:14px;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+/* FORM */
+
+.row{
+display:flex;
+gap:12px;
+margin-bottom:18px;
+}
+
+.input-group{
+width:100%;
+margin-bottom:18px;
+}
+
+label{
+font-size:12px;
+margin-bottom:6px;
+display:block;
+color:#374151;
+}
+
+/* INPUT FIELDS */
+
+input{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #d1d5db;
+
+background:linear-gradient(
+145deg,
+#ffffff,
+#f6faf3
+);
+
+color:#111827;
+font-size:14px;
+outline:none;
+transition:0.25s;
+}
+
+input::placeholder{
+color:#9ca3af;
+}
+
+input:focus{
+border-color:#7fb069;
+box-shadow:0 0 0 2px rgba(127,176,105,0.25);
+background:linear-gradient(
+145deg,
+#ffffff,
+#eef6e8
+);
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+
+background:linear-gradient(
+135deg,
+#7fb069,
+#5a8441
+);
+
+color:white;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(90,132,65,0.35);
+}
+
+/* DIVIDER */
+
+.divider{
+margin:28px 0;
+display:flex;
+align-items:center;
+color:#9ca3af;
+font-size:12px;
+}
+
+.divider::before,
+.divider::after{
+content:"";
+flex:1;
+height:1px;
+background:#e5e7eb;
+}
+
+.divider span{
+margin:0 10px;
+}
+
+/* GOOGLE BUTTON */
+
+.google-btn{
+background:#ffffff;
+border:1px solid #d1d5db;
+padding:13px;
+border-radius:10px;
+font-size:14px;
+color:#374151;
+}
+
+.google-btn:hover{
+background:#f9fafb;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:600px){
+
+.container{
+padding:35px 25px;
+}
+
+.row{
+flex-direction:column;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create Account</h2>
+<p class="subtitle">Join Tallow & Care and start exploring</p>
+
+<form>
+
+<div class="row">
+
+<div class="input-group">
+<label>First Name</label>
+<input type="text" required>
+</div>
+
+<div class="input-group">
+<label>Last Name</label>
+<input type="text" required>
+</div>
+
+</div>
+
+<div class="input-group">
+<label>Email Address</label>
+<input type="email" required>
+</div>
+
+<div class="input-group">
+<label>Phone Number</label>
+<input type="tel" required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password" required>
+</div>
+
+<div class="input-group">
+<label>Confirm Password</label>
+<input type="password" required>
+</div>
+
+<button type="submit">
+Create Account →
+</button>
+
+<div class="divider">
+<span>or continue</span>
+</div>
+
+<button type="button" class="google-btn">
+Continue with Google
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

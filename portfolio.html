@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        h1{
+            margin-right: 45px;
+        }
+        header{
+            background-color: #333;
+            color: #fff;
+            padding:20px;
+            text-align: center;
+        }
+        header nav ul{
+            list-style:none;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+            justify-content: space-between;
+        }
+        nav ul{
+            display: flex;
+        }
+        header nav ul li{
+            margin-right: 20px;
+        }
+        header nav a {
+            color:#fff;
+            text-decoration: none;
+        }
+        section{
+            padding: 20px;
+        }
+        .project{
+            margin-bottom: 20px;
+        }
+        .project img{
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        footer{
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            clear: both;
+        }
+        
+        .form{
+            display: flex;
+            justify-content: space-between;
+        }
+        .send{
+            background-color: blue;
+            color: #fff;
+            height: 40px;
+            width: 80px;
+            padding: 10px;
+            margin: 0;
+            border: none;
+            border-radius: 4px;
+        }
+        .send:hover{
+            background-color: red;
+        }
+        .send:active{
+            background-color: rgb(170, 0, 0);
+        }
+    </style>
+</head>
+<body>
+    <header><h1>My Name</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contacts</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="about">
+        <h2>About Me</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio est assumenda quod error ea provident ab? Nostrum, earum delectus. Laudantium quibusdam assumenda iure aliquid cumque velit impedit facilis tempore ratione.</p>
+    </section>
+    <section class="projects">
+        <h2>My Projects</h2>
+        <div class="project">
+            <img src="project1.jpg" alt="Project1">
+            <h3>Project 1</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus magnam dignissimos numquam culpa. Magnam sed ipsam dignissimos, consequuntur cumque consectetur ex voluptates suscipit corrupti. Inventore accusantium illum nemo fugiat ut.</p>
+        </div>
+        <div class="project">
+            <img src="project2.jpg" alt="Project1">
+            <h3>Project 2</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus magnam dignissimos numquam culpa. Magnam sed ipsam dignissimos, consequuntur cumque consectetur ex voluptates suscipit corrupti. Inventore accusantium illum nemo fugiat ut.</p>
+        </div>
+    </section>
+    <section class="contact">
+        <h2>Get in touch with me</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo labore sit sapiente numquam sequi quisquam illo quae blanditiis. Mollitia qui hic iure esse sit eos quibusdam minus adipisci fugit eligendi!</p>
+        <form class="form">
+            <input type="email" placeholder="Email">
+            <textarea placeholder="Message"></textarea>
+            <button class="send">Send</button>
+        </form>
+    </section>
+    <footer>&copy;2024 My Name</footer>
+</body>
+</html>

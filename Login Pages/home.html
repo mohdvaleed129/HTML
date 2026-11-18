@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30vh;
+            
+        }
+        .title{
+            padding: 20px;
+            background-color: rgb(127, 207, 22);
+            width: 100%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            border: none;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        form .form{
+            display: inline-flexbox;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <section class="title">
+            <h1>Contact Form</h1>
+            <div>Please fill all the texts in the field</div>
+        </section>
+        <section class="form">
+            <label for="uname">Your Name :</label>
+            <input type="text" name="uname" placeholder="Your Full Name" class="yourname" required>
+            <label for="email">Your Email :</label>
+            <input type="email" name="email" placeholder="Enter Email Address" class="youremail" required>
+            <label for="message">Message :</label>
+            <input type="message" name="message" placeholder="Your Message to Us" class="image">
+            <label for="Job">Subject :</label>
+            <input type="text" name="Job" placeholder="Job Inquiry" class="subject">
+            <button>Send</button>
+        </section>
+    </form>
+</body>
+</html>

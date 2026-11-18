@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Rajdhani&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .swiper-button-prev,
+        .swiper-button-next {
+            background: transparent;
+            width: 55px;
+            height: 55px;
+            text-align: center;
+            border: 2px solid #d4d3d3;
+            border-radius: 50%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .3s ease;
+        }
+        .hero-slider:hover .swiper-button-prev,
+        .hero-slider:hover .swiper-button-next {
+            opacity: 1;
+            visibility: visible;
+        }
+        .swiper-pagination {
+            bottom: 30px;
+        }
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            opacity: 0.3;
+            transition: all .2s ease;
+        }
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-rajdhani">
+    <section class="hero-slider w-full h-[700px] relative z-0">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1578934191836-ff5f608c2228?ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80');">
+                    <div class="flex flex-col justify-center items-start text-left h-full p-4">
+                        <h2 class="text-white text-3xl">GUITAR CLASSES FOR KIDS</h2>
+                        <p class="text-white">Want to see your kid become more expressive?</p>
+                        <div class="mt-4">
+                            <a href="#" class="bg-blue-500 text-white py-2 px-4 rounded">Register now</a>
+                            <a href="#" class="bg-green-500 text-white py-2 px-4 rounded"><i class="fas fa-chevron-circle-right"></i> Get Info</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1579003087287-997fd4d18771?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="flex flex-col justify-center items-start text-left h-full p-4">
+                        <h2 class="text-white text-3xl">MUSIC CLASSES FOR ALL AGES</h2>
+                        <p class="text-white">Join us to explore the world of music!</p>
+                        <div class="mt-4">
+                            <a href="#" class="bg-blue-500 text-white py-2 px-4 rounded">Register now</a>
+                            <a href="#" class="bg-green-500 text-white py-2 px-4 rounded"><i class="fas fa-chevron-circle-right"></i> Get Info</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            speed: 1000,
+            autoplay: {
+                delay: 6500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+</body>
+</html>

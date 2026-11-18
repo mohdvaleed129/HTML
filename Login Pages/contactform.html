@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2035 Hyper-Quantum Contact Section</title>
+    <style>
+        :root {
+            --bg-color: #030307;
+            --glass-bg: rgba(10, 10, 20, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(5, 5, 10, 0.6);
+            --glow-primary: #00f2fe;
+            --glow-accent: #7f00ff;
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --noise-svg: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(127, 0, 255, 0.08) 0%, transparent 50%);
+        }
+
+        /* --- THE QUANTUM CONTACT SECTION --- */
+        #contact {
+            width: 100%;
+            padding: 120px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+        }
+
+        .section-inner {
+            max-width: 1320px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Cinematic Subtle Grid Backplane Overlay */
+        .section-inner::before {
+            content: "";
+            position: absolute;
+            inset: -40px;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: translateZ(-50px);
+            mask-image: radial-gradient(circle, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle, black, transparent 80%);
+            pointer-events: none;
+        }
+
+        /* --- TYPOGRAPHY & METADATA BRANDING --- */
+        .section-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--glow-primary);
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 60px;
+            background: linear-gradient(180deg, #ffffff 30%, #a2a2a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- THE CORE GRID SYSTEM --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        /* --- INFO PANEL CONTEXT --- */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            max-width: 540px;
+        }
+
+        /* --- INTERACTIVE CARD NODE MATRIX --- */
+        .contact-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .contact-item {
+            background: rgba(15, 15, 25, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, background-color 0.4s;
+            box-shadow: 
+                0 4px 15px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+
+        .contact-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            background-image: var(--noise-svg);
+            opacity: 0.01;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        .contact-item::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px) translateZ(15px) scale(1.02);
+            background: rgba(20, 20, 40, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 15px 30px rgba(0,0,0,0.4),
+                0 0 20px rgba(0, 242, 254, 0.05);
+        }
+
+        /* Spatial Micro-nodes for Icons */
+        .ci-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transform: translateZ(10px);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+            transition: transform 0.4s, background-color 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+
+        .contact-item:hover .ci-icon {
+            transform: translateZ(20px) scale(1.1) rotate(4deg);
+            background: rgba(0, 242, 254, 0.1);
+            border-color: rgba(0, 242, 254, 0.3);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .ci-label {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 2px;
+            transition: color 0.3s;
+        }
+
+        .ci-val {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .contact-item:hover .ci-label { color: var(--text-main); }
+        .contact-item:hover .ci-val { color: var(--glow-primary); text-shadow: 0 0 8px rgba(0, 242, 254, 0.2); }
+
+        /* --- THE GLASSMORPHIC FORM INSTRUMENT --- */
+        .contact-form {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-radius: 32px;
+            padding: 48px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            box-shadow: 
+                0 0 0 1px var(--glass-border),
+                inset 0 1px 2px rgba(255, 255, 255, 0.15),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.5),
+                0 20px 50px rgba(0, 0, 0, 0.4),
+                0 40px 90px rgba(0, 0, 0, 0.3);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .contact-form:hover {
+            transform: scale3d(1.005, 1.005, 1.005) translateZ(10px);
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.12),
+                inset 0 1px 3px rgba(255, 255, 255, 0.25),
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 50px 110px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(0, 242, 254, 0.04);
+        }
+
+        .contact-form::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            background-image: var(--noise-svg);
+            opacity: 0.015;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Moving Perimetral RGB Conic Accent */
+        .contact-form::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 34px;
+            background: conic-gradient(from 45deg at 50% 50%, transparent 0deg, transparent 150deg, var(--glow-primary) 200deg, var(--glow-accent) 260deg, transparent 310deg, transparent 360deg);
+            animation: chromaticRotate 12s linear infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.35;
+            z-index: -1;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .form-row .form-group { margin-bottom: 0; }
+
+        label {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-left: 4px;
+            transition: color 0.3s, transform 0.3s;
+            transform-origin: left;
+        }
+
+        .form-input, 
+        .form-textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            color: var(--text-main);
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.4s, background-color 0.4s, box-shadow 0.4s, transform 0.3s;
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group:hover label { color: var(--text-main); }
+        
+        .form-input:hover, .form-textarea:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(15, 15, 30, 0.7);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--glow-primary);
+            background: rgba(10, 10, 25, 0.8);
+            transform: translateZ(5px);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(0, 242, 254, 0.15),
+                0 0 0 1px var(--glow-primary);
+        }
+
+        .form-group:focus-within label {
+            color: var(--glow-primary);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+
+        /* --- THE PRESTIGE EMISSION SUBMIT BUTTON --- */
+        .btn-primary {
+            position: relative;
+            height: 56px;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border: none;
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            transform-style: preserve-3d;
+            transform: translateZ(10px);
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(127, 0, 255, 0.2));
+            opacity: 0.6;
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 30%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.2) 70%, transparent);
+            transform: skewX(-25deg);
+            z-index: 2;
+        }
+
+        .btn-primary:hover {
+            transform: translateZ(20px) scale(1.015);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 
+                0 0 0 1px rgba(0, 242, 254, 0.4),
+                0 0 30px rgba(0, 242, 254, 0.25),
+                0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-primary:hover::after { animation: sweepShine 1.5s linear infinite; }
+        
+        .btn-primary:active {
+            transform: translateZ(5px) scale(0.98);
+            box-shadow: 0 0 0 1px rgba(0, 242, 254, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-primary span { position: relative; z-index: 3; }
+
+        #form-success {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(0, 255, 135, 0.06);
+            border: 1px solid rgba(0, 255, 135, 0.2);
+            color: #00ff87;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+            animation: paneEntrance 0.5s ease forward;
+        }
+
+        /* --- KINETIC ANIMATIONS --- */
+        @keyframes chromaticRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes sweepShine {
+            0% { left: -150%; }
+            50% { left: 150%; }
+            100% { left: 150%; }
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.4; }
+            100% { opacity: 0.9; }
+        }
+        @keyframes paneEntrance {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESPONSIVE ADAPTATION --- */
+        @media (max-width: 1024px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #contact { padding: 80px 16px; }
+            .contact-items { grid-template-columns: 1fr; gap: 16px; }
+            .contact-form { padding: 32px 20px; border-radius: 24px; }
+            .contact-form::after { border-radius: 26px; }
+            .form-row { flex-direction: column; gap: 0; }
+            .form-row .form-group { margin-bottom: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="contact">
+        <div class="section-inner">
+            <div class="section-tag">Contact</div>
+            <h2 class="section-title fade-up">Let's Build<br/>Something.</h2>
+            
+            <div class="contact-grid">
+                <div class="contact-info fade-up">
+                    <p>I'm open to internships, freelance projects, hackathon collaborations, and full-time roles. If you're building something ambitious and need someone who can work across the stack — from React to ESP32 — let's talk.</p>
+                    
+                    <div class="contact-items">
+                        <a href="mailto:mohdvaleedhasan@gmail.com" class="contact-item">
+                            <div class="ci-icon">✉️</div>
+                            <div>
+                                <div class="ci-label">Email</div>
+                                <div class="ci-val">mohdvaleedhasan</div>
+                            </div>
+                        </a>
+                        <a href="https://linkedin.com/in/mohd-valeed-hasan" target="_blank" class="contact-item">
+                            <div class="ci-icon">💼</div>
+                            <div>
+                                <div class="ci-label">LinkedIn</div>
+                                <div class="ci-val">mohd-valeed-hasan</div>
+                            </div>
+                        </a>
+                        <a href="https://github.com/valeed910" target="_blank" class="contact-item">
+                            <div class="ci-icon">🐙</div>
+                            <div>
+                                <div class="ci-label">GitHub</div>
+                                <div class="ci-val">valeed910</div>
+                            </div>
+                        </a>
+                        <a href="https://tallowandcare.in" target="_blank" class="contact-item">
+                            <div class="ci-icon">🌿</div>
+                            <div>
+                                <div class="ci-label">Company</div>
+                                <div class="ci-val">tallowandcare.in</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <form id="contactForm" class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" class="form-input" type="text" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input id="email" class="form-input" type="email" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input id="subject" class="form-input" type="text" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="form-textarea" required autocomplete="off"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
+                        <span>Send Message</span>
+                    </button>
+
+                    <div id="form-success" style="display:none">
+                        ✓ Message sent successfully!
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

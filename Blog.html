@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <style>
+        body{
+            font-family: Arial,sans-serif;
+            margin :0;
+            padding: 0;
+        }
+        header{
+            padding: 20px;
+            background-color: #333;
+            color : #fff;
+            text-align: center;
+        }
+        nav ul{
+            list-style: none;
+            margin:0;
+            padding: 0;
+            display : flex;
+            justify-content: space-between;
+        }
+        nav li{
+            margin-right: 20px;
+        }
+        nav a{
+            color: #fff;
+            text-decoration: none;
+        }
+        main{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding:20px  
+            }
+        section{
+            background-color: #f7f7f7;
+            padding:20px ;
+            margin-bottom:20px ;
+            box-shadow: 0 0 10px rgba(0,0, 0, 0.1);
+        }
+        h1,h2{
+            margin-top:0;
+        }
+        footer{
+            background-color: #333;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Welcome To My Blog</h1>
+        <nav>
+            <ul>
+                <li class="#post1">Post 1</li>
+                <li class="#post2">Post 2</li>
+                <li class="#post3">Post 3</li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="post1">
+            <h2>Post 1 Title</h2>
+            <p>Post 1 Content . . .</p>
+        </section>
+        <section class="post2">
+            <h2>Post 2 Title</h2>
+            <p>Post 2 Content . . .</p>
+        </section>
+        <section class="post3">
+            <h2>Post 3 Title</h2>
+            <p>Post 3 Content . . .</p>
+        </section>
+    </main>
+    <footer><p>@copy 2024 My Blog</p></footer>
+</body>
+</html>

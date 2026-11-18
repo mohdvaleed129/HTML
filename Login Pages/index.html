@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valeed</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scene" id="scene">
+  <header class="dock-wrap">
+    <div class="dock-shell">
+      <nav class="dock" id="dock" aria-label="Primary">
+
+        <div class="layer layer-glow" aria-hidden="true">
+          <span class="orb orb-a"></span>
+          <span class="orb orb-b"></span>
+        </div>
+
+        <div class="layer layer-glass">
+          <span class="specular" id="specular" aria-hidden="true"></span>
+        </div>
+
+        <div class="layer layer-content">
+
+          <a class="mark" href="#home" aria-label="Home">
+            <span class="core" aria-hidden="true">
+              <span class="core-ring core-ring-1"></span>
+              <span class="core-ring core-ring-2"></span>
+              <span class="core-dot"></span>
+            </span>
+            <span class="wordmark" aria-label="Valeed">
+              <span style="--i:0">V</span><span style="--i:1">a</span><span style="--i:2">l</span><span style="--i:3">e</span><span style="--i:4">e</span><span style="--i:5">d</span>
+            </span>
+          </a>
+
+          <input type="checkbox" id="dock-toggle" class="dock-toggle-input">
+          <label for="dock-toggle" class="dock-toggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </label>
+
+          <div class="menu">
+            <ul class="links" id="links">
+              <li style="--i:6"><a href="#work" class="link" aria-current="page">Work</a></li>
+              <li style="--i:7"><a href="#about" class="link">About</a></li>
+              <li style="--i:8"><a href="#lab" class="link">Lab</a></li>
+              <li style="--i:9"><a href="#contact" class="link">Contact</a></li>
+              <span class="indicator" id="indicator" aria-hidden="true"></span>
+            </ul>
+
+            <a href="#contact" class="cta" style="--i:10">
+              <span class="cta-label">Hire me</span>
+            </a>
+          </div>
+
+        </div>
+
+      </nav>
+    </div>
+  </header>
+</div>
+
+<main>
+  <section id="home" class="filler">
+    <h1>Move your cursor near the bar</h1>
+    <p>It tilts in real 3D space, the glow layer drifts behind it at a different rate.</p>
+  </section>
+  <section class="filler"></section>
+</main>
+
+<script>
+(function(){
+  var scene = document.getElementById('scene');
+  var shell = document.querySelector('.dock-shell');
+  var dock = document.getElementById('dock');
+  var glow = dock.querySelector('.layer-glow');
+  var specular = document.getElementById('specular');
+  var nav = document.getElementById('links');
+  var indicator = document.getElementById('indicator');
+  var links = nav.querySelectorAll('.link');
+  var cta = document.querySelector('.cta');
+  var ctaLabel = cta.querySelector('.cta-label');
+
+  var tx = 0, ty = 0, cx = 0, cy = 0;
+  var maxTilt = 7;
+  var lastClientX = 0, lastClientY = 0;
+
+  function onMove(e){
+    lastClientX = e.clientX;
+    lastClientY = e.clientY;
+    var r = dock.getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width;
+    var py = (e.clientY - r.top) / r.height;
+    tx = (py - 0.5) * -2;
+    ty = (px - 0.5) * 2;
+
+    if (px >= -0.3 && px <= 1.3 && py >= -0.5 && py <= 1.5){
+      specular.style.opacity = '1';
+      specular.style.background = 'radial-gradient(circle at ' + (px * 100) + '% ' + (py * 100) + '%, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 32%, transparent 60%)';
+    } else {
+      specular.style.opacity = '0';
+    }
+
+    var cr = cta.getBoundingClientRect();
+    var ccx = cr.left + cr.width / 2;
+    var ccy = cr.top + cr.height / 2;
+    var dx = e.clientX - ccx;
+    var dy = e.clientY - ccy;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var radius = 90;
+    if (dist < radius){
+      var pull = (1 - dist / radius);
+      var mx = dx * pull * 0.35;
+      var my = dy * pull * 0.35;
+      cta.style.transform = 'translate(' + mx + 'px,' + my + 'px) translateZ(10px)';
+      ctaLabel.style.transform = 'translate(' + (mx * 0.4) + 'px,' + (my * 0.4) + 'px)';
+    } else {
+      cta.style.transform = '';
+      ctaLabel.style.transform = '';
+    }
+  }
+
+  function onLeave(){
+    tx = 0; ty = 0;
+    specular.style.opacity = '0';
+    cta.style.transform = '';
+    ctaLabel.style.transform = '';
+  }
+
+  scene.addEventListener('mousemove', onMove);
+  scene.addEventListener('mouseleave', onLeave);
+
+  function tick(){
+    cx += (tx - cx) * 0.08;
+    cy += (ty - cy) * 0.08;
+    dock.style.transform = 'rotateX(' + (cx * maxTilt) + 'deg) rotateY(' + (cy * maxTilt) + 'deg)';
+    glow.style.transform = 'translate3d(' + (cy * -14) + 'px,' + (cx * -10) + 'px,-70px)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function moveIndicator(el){
+    var navRect = nav.getBoundingClientRect();
+    var rect = el.getBoundingClientRect();
+    indicator.style.opacity = '1';
+    indicator.style.width = rect.width + 'px';
+    indicator.style.transform = 'translateX(' + (rect.left - navRect.left) + 'px)';
+  }
+
+  links.forEach(function(link){
+    link.addEventListener('mouseenter', function(){ moveIndicator(link); });
+  });
+
+  nav.addEventListener('mouseleave', function(){
+    var active = nav.querySelector('.link[aria-current="page"]');
+    if (active) { moveIndicator(active); }
+  });
+
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var active = nav.querySelector('.link[aria-current="page"]');
+      if (active) { moveIndicator(active); }
+    }, 1500);
+  });
+
+  window.addEventListener('resize', function(){
+    var active = nav.querySelector('.link[aria-current="page"]');
+    if (active) { moveIndicator(active); }
+  });
+
+  var scrolled = false;
+  window.addEventListener('scroll', function(){
+    var should = window.scrollY > 40;
+    if (should !== scrolled){
+      scrolled = should;
+      shell.classList.toggle('is-scrolled', scrolled);
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

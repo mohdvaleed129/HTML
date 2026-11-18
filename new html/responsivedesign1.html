@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Responsive Layout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+        }
+        
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2em;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+            clear: both;
+        }
+        
+        /* Media Queries */
+        
+        @media (min-width: 768px) {
+            main {
+                flex-direction: row;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            header {
+                padding: 0.5em;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <header>Header</header>
+    <main>Main Content</main>
+    <footer>Footer</footer>
+</body>
+</html>

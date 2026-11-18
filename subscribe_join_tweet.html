@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>buttons</title>
+    </head>
+    <body>
+        <style>
+            p{
+                border: none;
+                height: 36px;
+                width: 74;
+                border-radius: 18px;
+                margin-left: 8px;
+                font-weight: bold;
+                font-size: 15px;
+                transition: box-shadow 0.15s;
+            }
+            .tweet-button:hover{
+                box-shadow :1px 10px 15px rgba(0, 0, 0, 0.15);
+            }.subscribe-button{
+            background-color: rgb(199, 0, 0);
+            color: white;
+            border : none;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            padding-left: 16px;
+            padding-bottom: 10px;
+            padding-right: 16px;
+            padding-top: 10px;
+            }
+            .subscribe-button:hover {
+                opacity : 0.8;
+            }
+            .subscribe-button:active{
+                opacity : 0.5;
+            }
+            .join-button{
+            background-color: white;
+            height: 36px;
+            width: 70;
+            color: rgb(41, 118, 211);
+            border-color: rgb(41, 118, 211);
+            border-radius: 2px;
+            cursor: pointer;
+            margin-left: 8px;
+            border-style: solid;
+            border-width: 1px;
+            font-weight: bold;
+            font-size: 14px;
+            }
+            .join-button:hover{
+                background-color: rgb(41, 118, 211);
+                color : white;
+            }
+            .join-button:active{
+                opacity : 0.7;
+            }
+            .tweet-button{
+                background-color: rgb(55, 55, 243);
+                color: white;
+            }
+        </style>
+        <button class ="subscribe-button">SUBSCRIBE</button>
+        <button class ="join-button"> JOIN </button>
+        <button class = "tweet-button">Tweet</button>
+    </body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Valeed Portfolio</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="style.css">
+
+</head>
+<style>
+    /* ==========================================================
+   Premium Navbar - Part 2 : Optical Glass Engine
+   ========================================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#05070b;
+    --glass:rgba(255,255,255,.08);
+    --glass-2:rgba(255,255,255,.03);
+    --line:rgba(255,255,255,.12);
+    --text:#eef4ff;
+    --cyan:#49f2ff;
+    --blue:#5b8cff;
+    --violet:#9d6bff;
+    --radius:34px;
+}
+
+html{
+    scroll-behavior:smooth;
+    background:var(--bg);
+}
+
+body{
+    font-family:Inter,sans-serif;
+    color:var(--text);
+    min-height:200vh;
+    overflow-x:hidden;
+    background:
+    radial-gradient(circle at 15% 10%,rgba(73,242,255,.08),transparent 35%),
+    radial-gradient(circle at 85% 0%,rgba(157,107,255,.08),transparent 35%),
+    linear-gradient(#040608,#070b12);
+}
+
+/* Hero */
+
+.hero{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    text-align:center;
+    gap:18px;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,6rem);
+    letter-spacing:-.04em;
+}
+
+.hero p{
+    opacity:.7;
+    font-size:1.1rem;
+}
+
+/* Navbar wrapper */
+
+.navbar-wrapper{
+    position:fixed;
+    inset:24px 0 auto;
+    display:flex;
+    justify-content:center;
+    z-index:1000;
+    perspective:1800px;
+    pointer-events:none;
+}
+
+.navbar{
+    pointer-events:auto;
+    width:min(1180px,calc(100% - 32px));
+    height:76px;
+    position:relative;
+    border-radius:var(--radius);
+    transform-style:preserve-3d;
+    isolation:isolate;
+    transition:
+        transform .6s cubic-bezier(.22,1,.36,1),
+        width .5s ease;
+}
+
+/* Glass Layers */
+
+.glass-layer,
+.glass-reflection,
+.glass-refraction,
+.glass-noise,
+.glass-shadow,
+.aurora-layer,
+.particle-layer{
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+}
+
+.glass-layer{
+    background:
+      linear-gradient(180deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.03));
+    backdrop-filter:blur(26px) saturate(180%);
+    -webkit-backdrop-filter:blur(26px) saturate(180%);
+    border:1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+    inset 0 1px rgba(255,255,255,.35),
+    inset 0 -1px rgba(255,255,255,.03),
+    0 10px 35px rgba(0,0,0,.35),
+    0 40px 90px rgba(0,0,0,.45);
+}
+
+.glass-reflection{
+    overflow:hidden;
+}
+
+.glass-reflection::before{
+    content:"";
+    position:absolute;
+    inset:-30%;
+    background:
+    linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255,255,255,.18) 45%,
+    rgba(255,255,255,.04) 55%,
+    transparent 70%);
+    animation:reflection 18s linear infinite;
+}
+
+@keyframes reflection{
+    from{transform:translateX(-60%) rotate(8deg);}
+    to{transform:translateX(60%) rotate(8deg);}
+}
+
+.glass-refraction{
+    border:1px solid transparent;
+}
+
+.glass-refraction::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    padding:1px;
+    border-radius:inherit;
+    background:
+    linear-gradient(135deg,
+    rgba(255,255,255,.45),
+    transparent 30%,
+    transparent 70%,
+    rgba(255,255,255,.15));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+}
+
+.glass-noise{
+    opacity:.045;
+    background:
+    radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1px),
+    radial-gradient(circle at 80% 70%,#fff 0 1px,transparent 1px),
+    radial-gradient(circle at 60% 20%,#fff 0 1px,transparent 1px);
+    background-size:90px 90px;
+    animation:noise 8s steps(8) infinite;
+}
+
+@keyframes noise{
+    to{transform:translate(24px,24px);}
+}
+
+.glass-shadow{
+    filter:blur(42px);
+    transform:translateY(30px) scale(.94);
+    background:
+    radial-gradient(circle,
+    rgba(0,0,0,.45),
+    transparent 70%);
+    z-index:-1;
+}
+
+.aurora-layer{
+    overflow:hidden;
+    filter:blur(45px);
+    opacity:.75;
+}
+
+.aurora-layer::before,
+.aurora-layer::after{
+    content:"";
+    position:absolute;
+    width:240px;
+    height:240px;
+    border-radius:50%;
+}
+
+.aurora-layer::before{
+    background:radial-gradient(circle,var(--cyan),transparent 70%);
+    left:-60px;
+    top:-80px;
+    animation:aurora1 10s ease-in-out infinite;
+}
+
+.aurora-layer::after{
+    background:radial-gradient(circle,var(--violet),transparent 70%);
+    right:-40px;
+    bottom:-120px;
+    animation:aurora2 12s ease-in-out infinite;
+}
+
+@keyframes aurora1{
+    50%{transform:translate(60px,25px) scale(1.2);}
+}
+@keyframes aurora2{
+    50%{transform:translate(-70px,-20px) scale(.9);}
+}
+
+.navbar-content{
+    position:relative;
+    z-index:5;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+}
+
+.logo{
+    color:inherit;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo-core{
+    width:34px;
+    height:34px;
+    position:relative;
+}
+
+.core{
+    position:absolute;
+    inset:9px;
+    border-radius:50%;
+    background:radial-gradient(circle,#fff,var(--cyan));
+    box-shadow:0 0 18px rgba(73,242,255,.7);
+}
+
+.ring{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.35);
+}
+
+.ring-one{animation:spin 8s linear infinite;}
+.ring-two{inset:4px;animation:spin 6s linear infinite reverse;}
+.ring-three{inset:8px;animation:spin 12s linear infinite;}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+.orbit{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--cyan);
+    top:50%;
+    left:50%;
+    transform-origin:-14px 0;
+}
+
+.orbit-one{animation:spin 4s linear infinite;}
+.orbit-two{animation:spin 6s linear infinite reverse;}
+.orbit-three{animation:spin 9s linear infinite;}
+
+.nav-links{
+    display:flex;
+    list-style:none;
+    gap:10px;
+    position:relative;
+}
+
+.nav-links a{
+    color:rgba(255,255,255,.72);
+    text-decoration:none;
+    padding:12px 18px;
+    border-radius:999px;
+    transition:.35s;
+}
+
+.nav-links a:hover{
+    color:#fff;
+    background:rgba(255,255,255,.05);
+}
+
+.liquid-indicator{
+    position:absolute;
+    inset:8px auto 8px 0;
+    width:0;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));
+    opacity:.12;
+}
+
+.cta{
+    position:relative;
+    text-decoration:none;
+    color:#081018;
+    font-weight:700;
+    background:#fff;
+    padding:14px 22px;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.cta-shine{
+    position:absolute;
+    inset:-150%;
+    background:linear-gradient(115deg,transparent 45%,rgba(255,255,255,.8) 50%,transparent 55%);
+    animation:shine 4s linear infinite;
+}
+
+@keyframes shine{
+    to{transform:translateX(220%);}
+}
+
+.menu-button{
+    display:none;
+}
+
+@media(max-width:900px){
+    .nav-links,.cta{display:none;}
+    .menu-button{
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+        background:none;
+        border:none;
+    }
+    .menu-button span{
+        width:22px;
+        height:2px;
+        background:#fff;
+    }
+}
+
+</style>
+
+<body>
+
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
+
+<header class="navbar-wrapper">
+
+<nav class="navbar">
+
+<!-- BACKGROUND -->
+
+<div class="glass-layer"></div>
+
+<div class="glass-reflection"></div>
+
+<div class="glass-refraction"></div>
+
+<div class="glass-noise"></div>
+
+<div class="glass-shadow"></div>
+
+<div class="aurora-layer"></div>
+
+<div class="particle-layer"></div>
+
+<!-- CONTENT -->
+
+<div class="navbar-content">
+
+<!-- LOGO -->
+
+<a href="#"
+class="logo">
+
+<div class="logo-core">
+
+<div class="ring ring-one"></div>
+
+<div class="ring ring-two"></div>
+
+<div class="ring ring-three"></div>
+
+<div class="core"></div>
+
+<div class="orbit orbit-one"></div>
+
+<div class="orbit orbit-two"></div>
+
+<div class="orbit orbit-three"></div>
+
+</div>
+
+<span class="logo-text">
+
+Valeed
+
+</span>
+
+</a>
+
+<!-- LINKS -->
+
+<ul class="nav-links">
+
+<li>
+
+<a href="#home">
+
+Home
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#about">
+
+About
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#projects">
+
+Projects
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#skills">
+
+Skills
+
+</a>
+
+</li>
+
+<li>
+
+<a href="#contact">
+
+Contact
+
+</a>
+
+</li>
+
+<div class="liquid-indicator"></div>
+
+</ul>
+
+<!-- BUTTON -->
+
+<a href="#contact"
+class="cta">
+
+<span>
+
+Hire Me
+
+</span>
+
+<div class="cta-glow"></div>
+
+<div class="cta-shine"></div>
+
+</a>
+
+<!-- MOBILE -->
+
+<button class="menu-button">
+
+<span></span>
+
+<span></span>
+
+<span></span>
+
+</button>
+
+</div>
+
+</nav>
+
+</header>
+
+<!-- ========================================= -->
+<!-- HERO -->
+<!-- ========================================= -->
+
+<section class="hero">
+
+<h1>
+
+Future Begins Here
+
+</h1>
+
+<p>
+
+Premium 3D Cinematic Navigation
+
+</p>
+
+</section>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

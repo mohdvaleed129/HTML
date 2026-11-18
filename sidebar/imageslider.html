@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Rajdhani&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+            var interleaveOffset = 0.5;
+            var swiperOptions = {
+                loop: true,
+                speed: 1000,
+                parallax: true,
+                autoplay: {
+                    delay: 6500,
+                    disableOnInteraction: false,
+                },
+                watchSlidesProgress: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                on: {
+                    progress: function() {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            var slideProgress = swiper.slides[i].progress;
+                            var innerOffset = swiper.width * interleaveOffset;
+                            var innerTranslate = slideProgress * innerOffset;
+                            swiper.slides[i].querySelector(".slide-inner").style.transform =
+                                "translate3d(" + innerTranslate + "px, 0, 0)";
+                        }
+                    },
+                    touchStart: function() {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = "";
+                        }
+                    },
+                    setTransition: function(speed) {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = speed + "ms";
+                            swiper.slides[i].querySelector(".slide-inner").style.transition =
+                                speed + "ms";
+                        }
+                    }
+                }
+            };
+            var swiper = new Swiper(".swiper-container", swiperOptions);
+            var sliderBgSetting = document.querySelectorAll(".slide-bg-image");
+            sliderBgSetting.forEach(function(slide) {
+                if (slide.getAttribute("data-background")) {
+                    slide.style.backgroundImage = "url(" + slide.getAttribute("data-background") + ")";
+                }
+            });
+        </script>
+    </head>
+    <body class="m-0 font-rajdhani">
+        <section class="hero-slider w-full h-[700px] relative z-0">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="slide-inner bg-cover bg-center h-full" style="background-image: url('https://images.unsplash.com/photo-1578934191836-ff5f608c2228?ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80');">
+                            <div class="container flex flex-col justify-center items-start text-left h-full">
+                                <div class="slide-title">
+                                    <h2 class="text-white text-3xl">GUITAR CLASSES FOR KIDS</h2>
+                                </div>
+                                <div class="slide-text">
+                                    <p class="text-white">Want to see your kid become more expressive?</p>
+                                </div>
+                                <div class="slide-btns mt-4">
+                                    <a href="#" class="theme-btn-s2 bg-blue-500 text-white py-2 px-4 rounded">Register now</a>
+                                    <a href="#" class="theme-btn-s3 bg-green-500 text-white py-2 px-4 rounded"><i class="fas fa-chevron-circle-right"></i> Get Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="slide-inner bg-cover bg-center h-full" style="background-image: url('https://images.unsplash.com/photo-1579003087287-997fd4d18771?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                            <div class="container flex flex-col justify-center items-start text-left h-full">
+                                <div class="slide-title">
+                                    <h2 class="text-white text-3xl">GUITAR CLASSES FOR KIDS</h2>
+                                </div>
+                                <div class="slide-text">
+                                    <p class="text-white">Want to see your kid become more expressive?</p>
+                                </div>
+                                <div class="slide-btns mt-4">
+                                    <a href="#" class="theme-btn-s2 bg-blue-500 text-white py-2 px-4 rounded">Register now</a>
+                                    <a href="#" class="theme-btn-s3 bg-green-500 text-white py-2 px-4 rounded"><i class="fas fa-chevron-circle-right"></i> Get Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+    </body>
+    </html>

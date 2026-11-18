@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2035 Hyper-Quantum Achievements Section</title>
+    <style>
+        :root {
+            --bg-color: #030307;
+            --glass-bg: rgba(10, 10, 20, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-primary: #00f2fe;
+            --glow-accent: #7f00ff;
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --noise-svg: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 30%, rgba(127, 0, 255, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(0, 242, 254, 0.06) 0%, transparent 50%);
+        }
+
+        /* --- THE QUANTUM ACHIEVEMENTS SECTION --- */
+        #achievements {
+            width: 100%;
+            padding: 120px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+        }
+
+        .section-inner {
+            max-width: 1320px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* --- TYPOGRAPHY & METADATA BRANDING --- */
+        .section-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--glow-primary);
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 60px;
+            background: linear-gradient(180deg, #ffffff 30%, #a2a2a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- ACHIEVEMENTS GRID SYSTEM --- */
+        .ach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        /* --- THE METALLIC 3D GLASSMOPRHIC CARD --- */
+        .ach-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.12),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.4);
+            transition: 
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ach-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            background-image: var(--noise-svg);
+            opacity: 0.015;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Conic Gradient Animated Edge Sweep on Hover */
+        .ach-card::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 33px;
+            background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 180deg, var(--glow-primary) 270deg, transparent 360deg);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        /* Interactive 3D Dynamics */
+        .ach-card:hover {
+            transform: scale3d(1.02, 1.02, 1.02) translateY(-6px) translateZ(20px);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 
+                0 20px 45px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(0, 242, 254, 0.04),
+                inset 0 1px 3px rgba(255, 255, 255, 0.25);
+        }
+
+        .ach-card:hover::after {
+            opacity: 0.4;
+            animation: chromaticRotate 4s linear infinite;
+        }
+
+        /* --- NODE SUB-ELEMENT ARCHITECTURE --- */
+        .ach-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 28px;
+            transform: translateZ(15px);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s, background-color 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+
+        .ach-card:hover .ach-icon {
+            transform: translateZ(30px) scale(1.1) rotate(-6deg);
+            background: rgba(127, 0, 255, 0.12);
+            border-color: rgba(127, 0, 255, 0.4);
+            box-shadow: 0 0 20px rgba(127, 0, 255, 0.25);
+        }
+
+        .ach-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            transform: translateZ(10px);
+            transition: color 0.3s;
+        }
+
+        .ach-card:hover .ach-title {
+            color: #ffffff;
+        }
+
+        .ach-desc {
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            flex-grow: 1;
+            transform: translateZ(5px);
+            transition: color 0.3s;
+        }
+
+        .ach-card:hover .ach-desc {
+            color: rgba(245, 245, 247, 0.8);
+        }
+
+        /* --- PRESTIGE PILL BADGES --- */
+        .ach-pos {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 8px 18px;
+            border-radius: 14px;
+            transform: translateZ(12px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ach-card:hover .ach-pos {
+            transform: translateZ(25px) scale(1.04);
+        }
+
+        /* Golden Layer Configuration */
+        .pos-1 {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        .ach-card:hover .pos-1 {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Cyan/Amethyst Premium Configuration */
+        .pos-win {
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            color: var(--glow-primary);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+        .ach-card:hover .pos-win {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        /* --- THE DYNAMIC DIVIDER ANCHOR --- */
+        .divider {
+            max-width: 1320px;
+            height: 1px;
+            margin: 60px auto 0 auto;
+            position: relative;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08) 20%, rgba(255, 255, 255, 0.08) 80%, transparent);
+        }
+
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--glow-primary), var(--glow-accent), transparent);
+            transform: translateX(-50%);
+            filter: blur(1px);
+        }
+
+        /* --- PROCEDURAL KINETIC LOOP --- */
+        @keyframes chromaticRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- RESPONSIVE ADAPTATION --- */
+        @media (max-width: 992px) {
+            .ach-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .ach-card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #achievements {
+                padding: 80px 16px;
+            }
+            .section-title {
+                margin-bottom: 40px;
+            }
+            .ach-card {
+                border-radius: 24px;
+            }
+            .ach-card::before {
+                border-radius: 24px;
+            }
+            .ach-card::after {
+                border-radius: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="achievements">
+        <div class="section-inner">
+            <div class="section-tag">Hackathons &amp; Wins</div>
+            <h2 class="section-title fade-up">8 Wins. 2 Projects.<br/>Zero Compromises.</h2>
+            
+            <div class="ach-grid">
+                <div class="ach-card fade-up">
+                    <div class="ach-icon">📡</div>
+                    <div class="ach-title">LoRa Mesh — Win #1–7</div>
+                    <div class="ach-desc">Self-healing mesh communication system built on ESP32-C3 and LoRa radio modules. Competed across 7 different hackathons — won all 7.</div>
+                    <div class="ach-pos pos-1">🥇 7× First Place</div>
+                </div>
+                
+                <div class="ach-card fade-up" style="transition-delay:0.1s">
+                    <div class="ach-icon">❤️</div>
+                    <div class="ach-title">CPR Patch — Win #8</div>
+                    <div class="ach-desc">AI-based wearable CPR device with real-time ECG monitoring and automated chest compressions. Flutter BLE app with medical-grade dark HUD.</div>
+                    <div class="ach-pos pos-win">🏆 Winner</div>
+                </div>
+                
+                <div class="ach-card fade-up" style="transition-delay:0.2s">
+                    <div class="ach-icon">🏢</div>
+                    <div class="ach-title">Youngest CTO</div>
+                    <div class="ach-desc">Founded and led the entire technical direction of Tallow &amp; Care Private Limited as a second-year student. From zero to live product with paying customers.</div>
+                    <div class="ach-pos pos-win">✓ Founder</div>
+                </div>
+                
+                <div class="ach-card fade-up" style="transition-delay:0.3s">
+                    <div class="ach-icon">👥</div>
+                    <div class="ach-title">Team Leadership</div>
+                    <div class="ach-desc">Managed and mentored 3 Web Developer Interns. Prepared formal offer letters and internship completion certificates under the company entity.</div>
+                    <div class="ach-pos pos-win">✓ Manager</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+</body>
+</html>

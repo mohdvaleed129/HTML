@@ -1,0 +1,1479 @@
+
+# Write the HTML file using Python file I/O directly
+# This avoids JSON escaping issues entirely
+
+html_code = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOHD VALEED // DIMENSIONAL PORTFOLIO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary: #00f0ff;
+    --secondary: #ff006e;
+    --tertiary: #8338ec;
+    --quaternary: #ffbe0b;
+    --dark: #0a0a0f;
+    --deep: #050508;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(0,240,255,0.05);
+    --border: rgba(0,240,255,0.12);
+    --border-hover: rgba(0,240,255,0.4);
+    --text: #e8e8f0;
+    --text-dim: rgba(232,232,240,0.5);
+    --text-faint: rgba(232,232,240,0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+    min-height: 100vh;
+}
+
+/* ============================================
+   CUSTOM CURSOR - ENERGY CORE
+   ============================================ */
+.cursor-core {
+    position: fixed;
+    width: 20px; height: 20px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100000;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1), height 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s;
+    mix-blend-mode: difference;
+    box-shadow: 0 0 10px var(--primary), 0 0 30px rgba(0,240,255,0.3), inset 0 0 10px rgba(0,240,255,0.2);
+}
+
+.cursor-core::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 4px; height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px #fff;
+}
+
+.cursor-core.hovering {
+    width: 50px; height: 50px;
+    border-color: var(--secondary);
+    box-shadow: 0 0 20px var(--secondary), 0 0 60px rgba(255,0,110,0.3), inset 0 0 20px rgba(255,0,110,0.2);
+}
+
+.cursor-core.clicking {
+    transform: translate(-50%, -50%) scale(0.7);
+}
+
+.cursor-trail {
+    position: fixed;
+    width: 5px; height: 5px;
+    background: var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+}
+
+/* ============================================
+   LOADING SEQUENCE
+   ============================================ */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--deep);
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), visibility 1.2s;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-ring {
+    width: 80px; height: 80px;
+    position: relative;
+}
+
+.loading-ring::before, .loading-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+}
+
+.loading-ring::before {
+    border-top-color: var(--primary);
+    animation: spin 1s linear infinite;
+}
+
+.loading-ring::after {
+    inset: 10px;
+    border-top-color: var(--tertiary);
+    animation: spin 1.5s linear infinite reverse;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+    margin-top: 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--primary);
+    animation: loadingPulse 2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { opacity: 0.3; letter-spacing: 0.5em; }
+    50% { opacity: 1; letter-spacing: 0.7em; }
+}
+
+.loading-progress {
+    margin-top: 1.2rem;
+    width: 180px;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-progress-bar {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--tertiary));
+    box-shadow: 0 0 10px var(--primary);
+    transition: width 0.3s;
+}
+
+/* ============================================
+   CANVAS BACKGROUND
+   ============================================ */
+#bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+}
+
+/* ============================================
+   POST-PROCESSING OVERLAYS
+   ============================================ */
+.scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9998;
+}
+
+.vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+    z-index: 9997;
+}
+
+/* ============================================
+   ORBS - VOLUMETRIC LIGHT SOURCES
+   ============================================ */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb1 {
+    width: 500px; height: 500px;
+    background: var(--primary);
+    top: -10%; right: -5%;
+    animation-delay: 0s;
+}
+
+.orb2 {
+    width: 400px; height: 400px;
+    background: var(--tertiary);
+    bottom: -10%; left: -5%;
+    animation-delay: -7s;
+}
+
+.orb3 {
+    width: 300px; height: 300px;
+    background: var(--secondary);
+    top: 40%; left: 30%;
+    opacity: 0.08;
+    animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -40px) scale(1.1); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(40px, 30px) scale(1.05); }
+}
+
+/* ============================================
+   HUD FRAME
+   ============================================ */
+.hud-corner {
+    position: fixed;
+    width: 60px; height: 60px;
+    border: 1px solid rgba(0,240,255,0.1);
+    z-index: 9995;
+    pointer-events: none;
+    transition: all 0.5s;
+}
+
+.hud-corner.tl { top: 1.5rem; left: 1.5rem; border-right: none; border-bottom: none; }
+.hud-corner.tr { top: 1.5rem; right: 1.5rem; border-left: none; border-bottom: none; }
+.hud-corner.bl { bottom: 1.5rem; left: 1.5rem; border-right: none; border-top: none; }
+.hud-corner.br { bottom: 1.5rem; right: 1.5rem; border-left: none; border-top: none; }
+
+.hud-data {
+    position: fixed;
+    bottom: 1.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3rem;
+    z-index: 9995;
+    pointer-events: none;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.hud-data span { display: flex; align-items: center; gap: 0.5rem; }
+
+.hud-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 6px var(--primary);
+    animation: hudPulse 2s ease-in-out infinite;
+}
+
+@keyframes hudPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+/* ============================================
+   NAVIGATION - DIMENSIONAL COMPASS
+   ============================================ */
+.nav-space {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.2rem 2.5rem;
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+
+.nav-space.scrolled {
+    background: rgba(5,5,8,0.8);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 2.5rem;
+}
+
+nav {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-shadow: 0 0 20px rgba(0,240,255,0.3);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.logo::after {
+    content: '//';
+    color: var(--secondary);
+    margin-left: 0.3rem;
+    animation: logoBlink 3s ease-in-out infinite;
+}
+
+@keyframes logoBlink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0; }
+}
+
+.logo:hover {
+    text-shadow: 0 0 30px rgba(0,240,255,0.5);
+    letter-spacing: 0.2em;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    border-radius: 6px;
+}
+
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 0; height: 1px;
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    transform: translateX(-50%);
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+    background: var(--surface-hover);
+    text-shadow: 0 0 20px rgba(0,240,255,0.3);
+}
+
+.nav-links a:hover::before {
+    width: 60%;
+}
+
+#hire-btn {
+    padding: 0.6rem 1.8rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    backdrop-filter: blur(10px);
+}
+
+#hire-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.1), transparent);
+    transition: left 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+#hire-btn:hover::before {
+    left: 100%;
+}
+
+#hire-btn:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 30px rgba(0,240,255,0.15), inset 0 0 30px rgba(0,240,255,0.05);
+    letter-spacing: 0.2em;
+    transform: translateY(-1px);
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.nav-toggle span {
+    width: 24px;
+    height: 1.5px;
+    background: var(--primary);
+    transition: all 0.4s;
+    box-shadow: 0 0 6px var(--primary);
+}
+
+/* ============================================
+   HERO SECTION - ARRIVAL SEQUENCE
+   ============================================ */
+#hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8rem 2.5rem 4rem;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.hero-inner {
+    max-width: 1400px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+/* Left Column */
+.hero-left {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+
+.hero-left.awakened {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s;
+}
+
+.hero-badge:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 0 20px rgba(0,240,255,0.1);
+}
+
+.badge-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0,255,136,0.3);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.hero-title span {
+    display: inline-block;
+    background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--tertiary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+/* Volumetric text glow */
+.hero-title::after {
+    content: 'MOHD VALEED';
+    position: absolute;
+    top: 0; left: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: inherit;
+    font-weight: 900;
+    letter-spacing: inherit;
+    line-height: inherit;
+    background: linear-gradient(135deg, rgba(0,240,255,0.4), rgba(131,56,236,0.2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(30px);
+    opacity: 0.5;
+    z-index: -1;
+    animation: titleGlow 4s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { opacity: 0.4; filter: blur(30px); }
+    50% { opacity: 0.7; filter: blur(45px); }
+}
+
+.hero-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 400;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    min-height: 2rem;
+    letter-spacing: 0.05em;
+}
+
+.typed-text {
+    text-shadow: 0 0 20px rgba(0,240,255,0.3);
+}
+
+.cursor-blink {
+    animation: blink 1s step-end infinite;
+    color: var(--primary);
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-desc {
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+    max-width: 540px;
+}
+
+.hero-desc strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(131,56,236,0.1));
+    color: var(--primary);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.15), transparent);
+    transition: left 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 30px rgba(0,240,255,0.15), inset 0 0 30px rgba(0,240,255,0.05);
+    transform: translateY(-2px);
+    letter-spacing: 0.15em;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-outline:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+    box-shadow: 0 0 20px rgba(0,240,255,0.08);
+    transform: translateY(-2px);
+}
+
+.btn-primary svg, .btn-outline svg {
+    transition: transform 0.3s;
+}
+
+.btn-primary:hover svg, .btn-outline:hover svg {
+    transform: scale(1.1);
+}
+
+/* Social Links */
+.hero-socials {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-link {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    background: var(--surface);
+    backdrop-filter: blur(5px);
+}
+
+.social-link svg {
+    width: 18px; height: 18px;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 20px rgba(0,240,255,0.1);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.social-link:hover svg {
+    filter: drop-shadow(0 0 6px var(--primary));
+}
+
+/* Meta Info */
+.hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+.hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    letter-spacing: 0.05em;
+}
+
+.hero-meta-item svg {
+    color: var(--primary);
+    opacity: 0.6;
+}
+
+/* ============================================
+   CODE WINDOW - RIGHT COLUMN
+   ============================================ */
+.hero-right {
+    opacity: 0;
+    transform: translateY(40px) translateX(30px);
+    transition: all 1.2s cubic-bezier(0.16,1,0.3,1) 0.3s;
+    perspective: 1000px;
+}
+
+.hero-right.awakened {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+}
+
+.code-window {
+    background: rgba(10, 10, 18, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow: 
+        0 25px 80px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(0,240,255,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+
+.code-window:hover {
+    transform: perspective(1000px) rotateY(-3deg) rotateX(2deg) translateY(-5px);
+    box-shadow: 
+        0 30px 100px rgba(0,0,0,0.5),
+        0 0 40px rgba(0,240,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    border-color: var(--border-hover);
+}
+
+.win-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.dot.r { background: #ff5f57; }
+.dot.y { background: #febc2e; }
+.dot.g { background: #28c840; }
+
+.code-window:hover .dot {
+    transform: scale(1.1);
+}
+
+.win-tab {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    letter-spacing: 0.05em;
+}
+
+.code-body {
+    padding: 1.2rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.9;
+    overflow-x: auto;
+}
+
+.code-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+
+.code-line:hover {
+    background: rgba(0,240,255,0.03);
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
+}
+
+.ln {
+    color: var(--text-faint);
+    font-size: 0.75rem;
+    min-width: 20px;
+    text-align: right;
+    user-select: none;
+}
+
+.kw { color: #c792ea; }
+.fn { color: #82aaff; }
+.op { color: #f78c6c; }
+.str { color: #c3e88d; }
+.num { color: #f07178; }
+.cm { color: var(--text-faint); font-style: italic; }
+
+.typing-bar {
+    display: inline-block;
+    width: 2px; height: 1.1em;
+    background: var(--primary);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+    box-shadow: 0 0 6px var(--primary);
+}
+
+/* ============================================
+   SCROLL INDICATOR
+   ============================================ */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 1s 3s;
+    z-index: 10;
+}
+
+.scroll-indicator.awakened {
+    opacity: 1;
+}
+
+.scroll-indicator span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--text-faint);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--primary), transparent);
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%; left: 0;
+    width: 100%; height: 100%;
+    background: var(--primary);
+    animation: scrollPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+@keyframes scrollPulse {
+    0% { top: -100%; }
+    100% { top: 100%; }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .hero-right {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .code-window:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    body { cursor: auto; }
+    .cursor-core, .cursor-trail { display: none; }
+    .nav-space { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hire-btn { display: none; }
+    .nav-toggle { display: flex; }
+    .hud-corner { width: 30px; height: 30px; }
+    .hud-data { gap: 1.5rem; font-size: 0.5rem; }
+    #hero { padding: 7rem 1.5rem 3rem; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+    .code-body { font-size: 0.75rem; padding: 1rem; }
+    .code-line:hover { margin: 0 -1rem; padding: 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-ring"></div>
+    <div class="loading-text">INITIALIZING SYSTEM</div>
+    <div class="loading-progress">
+        <div class="loading-progress-bar" id="loadingBar"></div>
+    </div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-core" id="cursorCore"></div>
+<div id="cursorTrails"></div>
+
+<!-- CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- POST-PROCESSING -->
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<!-- HUD -->
+<div class="hud-corner tl"></div>
+<div class="hud-corner tr"></div>
+<div class="hud-corner bl"></div>
+<div class="hud-corner br"></div>
+
+<div class="hud-data">
+    <span><span class="hud-dot"></span>SYSTEM: ONLINE</span>
+    <span>FPS: <span id="fpsCounter">60</span></span>
+    <span>ENTITIES: <span id="entityCount">0</span></span>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-space" id="navSpace">
+    <nav>
+        <div class="logo">VALEED</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#achievements">Hackathons</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a id="hire-btn" href="assets/Final Resume.pdf" target="_blank">Hire Me</a>
+        <div class="nav-toggle" id="navToggle">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+    <div class="hero-inner">
+        <div class="hero-left" id="heroLeft">
+            <div class="hero-badge">
+                <div class="badge-dot"></div>
+                Open to Internships & Opportunities
+            </div>
+            <h1 class="hero-title"><span>MOHD VALEED</span></h1>
+            <div class="hero-role">
+                <span id="typed-role" class="typed-text"></span><span class="cursor-blink">|</span>
+            </div>
+            <p class="hero-desc">
+                <strong>CTO & Co-founder, Full Stack Developer,</strong> and problem solver passionate about building technology that matters.
+                From developing <strong>LoRa-based communication systems</strong> to engineering <strong>production-ready full-stack platforms</strong>,
+                I combine software engineering, cloud technologies, and innovation to transform complex ideas into practical solutions.
+            </p>
+            <div class="hero-actions">
+                <a href="#projects" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    View Projects
+                </a>
+                <a href="#contact" class="btn-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Get in Touch
+                </a>
+            </div>
+            <div class="hero-socials">
+                <a href="https://github.com/valeed910" target="_blank" class="social-link" title="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/mohd-valeed-hasan" target="_blank" class="social-link" title="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <a href="mailto:mohdvaleedhasan@gmail.com" class="social-link" title="Email">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </a>
+                <a href="https://tallowandcare.in" target="_blank" class="social-link" title="Company">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Bareilly, India
+                </div>
+                <div class="hero-meta-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12 19.79 19.79 0 0 1 1.98 3.38 2 2 0 0 1 3.96 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    B.Tech IT - SRMSCET
+                </div>
+                <div class="hero-meta-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    Tallow & Care Pvt. Ltd.
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-right" id="heroRight">
+            <div class="code-window" id="codeWindow">
+                <div class="win-header">
+                    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                    <div class="win-tab">valeed.ts</div>
+                </div>
+                <div class="code-body">
+                    <div class="code-line"><span class="ln">1</span><span><span class="kw">const</span> <span class="fn">developer</span> = {</span></div>
+                    <div class="code-line"><span class="ln">2</span><span>&nbsp;&nbsp;<span class="op">name</span>: <span class="str">"Mohd Valeed"</span>,</span></div>
+                    <div class="code-line"><span class="ln">3</span><span>&nbsp;&nbsp;<span class="op">role</span>: <span class="str">"CTO & Full-Stack Dev"</span>,</span></div>
+                    <div class="code-line"><span class="ln">4</span><span>&nbsp;&nbsp;<span class="op">year</span>: <span class="str">"B.Tech Information Technology"</span>,</span></div>
+                    <div class="code-line"><span class="ln">5</span><span>&nbsp;&nbsp;<span class="op">hackathons</span>: {</span></div>
+                    <div class="code-line"><span class="ln">6</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">wins</span>: <span class="num">8</span>, <span class="op">projects</span>: <span class="num">2</span></span></div>
+                    <div class="code-line"><span class="ln">7</span><span>&nbsp;&nbsp;},</span></div>
+                    <div class="code-line"><span class="ln">8</span><span>&nbsp;&nbsp;<span class="op">stack</span>: [<span class="str">"React"</span>, <span class="str">"Node"</span>,</span></div>
+                    <div class="code-line"><span class="ln">9</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"MongoDB"</span>, <span class="str">"AWS"</span>],</span></div>
+                    <div class="code-line"><span class="ln">10</span><span>&nbsp;&nbsp;<span class="op">company</span>: <span class="str">"tallowandcare.in"</span>,</span></div>
+                    <div class="code-line"><span class="ln">11</span><span>&nbsp;&nbsp;<span class="fn">currentFocus</span>: () => {</span></div>
+                    <div class="code-line"><span class="ln">12</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="str">"Full-Stack"</span>;</span></div>
+                    <div class="code-line"><span class="ln">13</span><span>&nbsp;&nbsp;}</span></div>
+                    <div class="code-line"><span class="ln">14</span><span>}; <span class="typing-bar"></span></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator" id="scrollIndicator">
+        <span>SCROLL</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<script>
+// ============================================
+// DIMENSIONAL PORTFOLIO ENGINE
+// ============================================
+
+class DimensionalEngine {
+    constructor() {
+        this.mouse = { x: window.innerWidth/2, y: window.innerHeight/2, targetX: window.innerWidth/2, targetY: window.innerHeight/2 };
+        this.particles = [];
+        this.stars = [];
+        this.nebulaClouds = [];
+        this.time = 0;
+        this.fps = 60;
+        this.lastTime = performance.now();
+        this.frameCount = 0;
+        this.isAwakened = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupCanvas();
+        this.setupCursor();
+        this.setupNavigation();
+        this.setupScroll();
+        this.setupInteractions();
+        this.generateUniverse();
+        this.startLoadingSequence();
+        this.animate();
+    }
+    
+    setupCanvas() {
+        this.canvas = document.getElementById('bg-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+    }
+    
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        this.generateStars();
+    }
+    
+    generateUniverse() {
+        this.generateStars();
+        this.generateNebula();
+    }
+    
+    generateStars() {
+        this.stars = [];
+        const count = Math.floor((this.width * this.height) / 3000);
+        for (let i = 0; i < count; i++) {
+            this.stars.push({
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                z: Math.random() * 3 + 0.5,
+                size: Math.random() * 1.5 + 0.3,
+                brightness: Math.random(),
+                twinkleSpeed: Math.random() * 0.03 + 0.005,
+                twinklePhase: Math.random() * Math.PI * 2,
+                color: ['#ffffff','#ffe9c4','#d4fbff','#ffecd2','#e0e0ff'][Math.floor(Math.random()*5)],
+                parallax: Math.random() * 0.5 + 0.1
+            });
+        }
+        document.getElementById('entityCount').textContent = count + this.particles.length;
+    }
+    
+    generateNebula() {
+        this.nebulaClouds = [];
+        for (let i = 0; i < 5; i++) {
+            this.nebulaClouds.push({
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                radius: Math.random() * 400 + 250,
+                color: [
+                    'rgba(0, 240, 255, 0.02)',
+                    'rgba(131, 56, 236, 0.015)',
+                    'rgba(255, 0, 110, 0.01)',
+                    'rgba(0, 240, 255, 0.015)',
+                    'rgba(131, 56, 236, 0.01)'
+                ][i],
+                driftX: (Math.random() - 0.5) * 0.12,
+                driftY: (Math.random() - 0.5) * 0.12,
+                pulseSpeed: Math.random() * 0.001 + 0.0005,
+                pulsePhase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+    
+    startLoadingSequence() {
+        const bar = document.getElementById('loadingBar');
+        let progress = 0;
+        const load = () => {
+            progress += Math.random() * 12 + 8;
+            if (progress > 100) progress = 100;
+            bar.style.width = progress + '%';
+            if (progress < 100) {
+                setTimeout(load, Math.random() * 250 + 80);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                    this.awakenSequence();
+                }, 400);
+            }
+        };
+        load();
+    }
+    
+    awakenSequence() {
+        setTimeout(() => { document.getElementById('heroLeft').classList.add('awakened'); }, 300);
+        setTimeout(() => { document.getElementById('heroRight').classList.add('awakened'); }, 700);
+        setTimeout(() => { document.getElementById('scrollIndicator').classList.add('awakened'); }, 2000);
+        setTimeout(() => { this.typeText('typed-role', ['CTO & Co-founder','Full Stack Developer','Problem Solver','Tech Innovator']); }, 1200);
+        this.isAwakened = true;
+        setTimeout(() => {
+            for (let i = 0; i < 80; i++) {
+                const angle = (Math.PI * 2 * i) / 80;
+                const dist = Math.random() * 300 + 100;
+                this.particles.push({
+                    x: this.width/2 + Math.cos(angle) * dist,
+                    y: this.height/2 + Math.sin(angle) * dist,
+                    vx: -Math.cos(angle) * (Math.random() * 2 + 0.5),
+                    vy: -Math.sin(angle) * (Math.random() * 2 + 0.5),
+                    life: 1, decay: Math.random() * 0.008 + 0.003,
+                    size: Math.random() * 2 + 0.5,
+                    color: Math.random() > 0.5 ? '#00f0ff' : '#8338ec'
+                });
+            }
+        }, 500);
+    }
+    
+    typeText(elementId, texts) {
+        const el = document.getElementById(elementId);
+        let textIndex = 0, charIndex = 0, isDeleting = false;
+        const type = () => {
+            const currentText = texts[textIndex];
+            if (isDeleting) {
+                el.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                el.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            let typeSpeed = isDeleting ? 40 : 80;
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000; isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false; textIndex = (textIndex + 1) % texts.length; typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
+        };
+        type();
+    }
+    
+    setupCursor() {
+        const cursor = document.getElementById('cursorCore');
+        const trailsContainer = document.getElementById('cursorTrails');
+        const trails = [];
+        for (let i = 0; i < 10; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            const scale = 1 - (i / 10);
+            trail.style.width = (5 * scale) + 'px';
+            trail.style.height = (5 * scale) + 'px';
+            trail.style.opacity = (scale * 0.5).toString();
+            trailsContainer.appendChild(trail);
+            trails.push({ el: trail, x: this.mouse.x, y: this.mouse.y });
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            this.mouse.targetX = e.clientX;
+            this.mouse.targetY = e.clientY;
+            if (this.isAwakened && Math.random() > 0.9) this.spawnCursorParticles(e.clientX, e.clientY);
+        });
+        
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('clicking');
+            this.spawnParticles(this.mouse.x, this.mouse.y, 25, 'click');
+        });
+        
+        document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+        
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, button, .btn-primary, .btn-outline, .social-link, .nav-links a, #hire-btn'))
+                cursor.classList.add('hovering');
+        });
+        
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a, button, .btn-primary, .btn-outline, .social-link, .nav-links a, #hire-btn'))
+                cursor.classList.remove('hovering');
+        });
+        
+        const updateTrails = () => {
+            trails.forEach((trail, i) => {
+                const delay = (i + 1) * 0.07;
+                trail.x += (this.mouse.x - trail.x) * delay;
+                trail.y += (this.mouse.y - trail.y) * delay;
+                trail.el.style.left = trail.x + 'px';
+                trail.el.style.top = trail.y + 'px';
+            });
+            requestAnimationFrame(updateTrails);
+        };
+        updateTrails();
+    }
+    
+    spawnCursorParticles(x, y) {
+        for (let i = 0; i < 2; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 1.2 + 0.3;
+            this.particles.push({
+                x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                life: 1, decay: Math.random() * 0.025 + 0.015,
+                size: Math.random() * 1.2 + 0.3, color: '#00f0ff'
+            });
+        }
+    }
+    
+    spawnParticles(x, y, count, type) {
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+            const speed = type === 'click' ? Math.random() * 6 + 3 : Math.random() * 2 + 0.5;
+            this.particles.push({
+                x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                life: 1, decay: type === 'click' ? Math.random() * 0.015 + 0.008 : Math.random() * 0.02 + 0.01,
+                size: Math.random() * (type === 'click' ? 3 : 1.5) + 0.5,
+                color: type === 'click' 
+                    ? ['#00f0ff','#ff006e','#8338ec','#ffbe0b'][Math.floor(Math.random()*4)]
+                    : '#00f0ff'
+            });
+        }
+    }
+    
+    setupNavigation() {
+        const nav = document.getElementById('navSpace');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+        document.querySelectorAll('.nav-links a[href^="#"], .hero-actions a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    }
+    
+    setupScroll() {
+        window.addEventListener('wheel', (e) => {
+            this.stars.forEach(star => {
+                star.y += e.deltaY * star.parallax * 0.05;
+                if (star.y > this.height) star.y = 0;
+                if (star.y < 0) star.y = this.height;
+            });
+        }, { passive: true });
+    }
+    
+    setupInteractions() {
+        const codeWindow = document.getElementById('codeWindow');
+        if (codeWindow) {
+            codeWindow.addEventListener('mousemove', (e) => {
+                const rect = codeWindow.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                codeWindow.style.transform = 'perspective(1000px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg)';
+            });
+            codeWindow.addEventListener('mouseleave', () => {
+                codeWindow.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+            });
+        }
+        const title = document.querySelector('.hero-title');
+        if (title) {
+            title.addEventListener('mousemove', (e) => {
+                const rect = title.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                title.style.transform = 'perspective(1000px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 3) + 'deg)';
+            });
+            title.addEventListener('mouseleave', () => {
+                title.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+            });
+        }
+    }
+    
+    animate() {
+        const now = performance.now();
+        const delta = now - this.lastTime;
+        this.time += delta;
+        
+        this.frameCount++;
+        if (this.frameCount % 30 === 0) {
+            this.fps = Math.round(1000 / delta);
+            document.getElementById('fpsCounter').textContent = this.fps;
+        }
+        
+        this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.12;
+        this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.12;
+        
+        const cursor = document.getElementById('cursorCore');
+        cursor.style.left = this.mouse.x + 'px';
+        cursor.style.top = this.mouse.y + 'px';
+        
+        this.ctx.fillStyle = '#050508';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        
+        this.renderNebula();
+        this.renderStars();
+        this.renderParticles();
+        
+        this.lastTime = now;
+        requestAnimationFrame(() => this.animate());
+    }
+    
+    renderNebula() {
+        this.nebulaClouds.forEach(cloud => {
+            cloud.x += cloud.driftX; cloud.y += cloud.driftY;
+            if (cloud.x < -cloud.radius) cloud.x = this.width + cloud.radius;
+            if (cloud.x > this.width + cloud.radius) cloud.x = -cloud.radius;
+            if (cloud.y < -cloud.radius) cloud.y = this.height + cloud.radius;
+            if (cloud.y > this.height + cloud.radius) cloud.y = -cloud.radius;
+            
+            const pulse = Math.sin(this.time * cloud.pulseSpeed + cloud.pulsePhase) * 0.3 + 0.7;
+            const match = cloud.color.match(/[0-9.]+[)]/);
+            const baseOpacity = match ? parseFloat(match[0]) : 0.02;
+            const newColor = cloud.color.replace(/[0-9.]+[)]/, (baseOpacity * pulse).toFixed(3) + ')');
+            const halfColor = cloud.color.replace(/[0-9.]+[)]/, (baseOpacity * pulse * 0.5).toFixed(3) + ')');
+            
+            const gradient = this.ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, cloud.radius);
+            gradient.addColorStop(0, newColor);
+            gradient.addColorStop(0.5, halfColor);
+            gradient.addColorStop(1, 'transparent');
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(cloud.x - cloud.radius, cloud.y - cloud.radius, cloud.radius * 2, cloud.radius * 2);
+        });
+    }
+    
+    renderStars() {
+        this.stars.forEach(star => {
+            const twinkle = Math.sin(this.time * star.twinkleSpeed + star.twinklePhase) * 0.5 + 0.5;
+            const brightness = star.brightness * twinkle;
+            const parallaxX = (this.mouse.x - this.width/2) * star.parallax * 0.02;
+            const parallaxY = (this.mouse.y - this.height/2) * star.parallax * 0.02;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(star.x + parallaxX, star.y + parallaxY, star.size * (0.5 + brightness * 0.5), 0, Math.PI * 2);
+            this.ctx.fillStyle = star.color;
+            this.ctx.globalAlpha = brightness * 0.8;
+            this.ctx.fill();
+            
+            if (brightness > 0.7) {
+                this.ctx.beginPath();
+                this.ctx.arc(star.x + parallaxX, star.y + parallaxY, star.size * 3, 0, Math.PI * 2);
+                this.ctx.fillStyle = star.color;
+                this.ctx.globalAlpha = brightness * 0.15;
+                this.ctx.fill();
+            }
+        });
+        this.ctx.globalAlpha = 1;
+    }
+    
+    renderParticles() {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += p.vx; p.y += p.vy;
+            p.life -= p.decay;
+            p.vx *= 0.98; p.vy *= 0.98;
+            
+            if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+            
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            this.ctx.fillStyle = p.color;
+            this.ctx.globalAlpha = p.life;
+            this.ctx.fill();
+            
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size * p.life * 3, 0, Math.PI * 2);
+            this.ctx.fillStyle = p.color;
+            this.ctx.globalAlpha = p.life * 0.2;
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+        document.getElementById('entityCount').textContent = this.stars.length + this.particles.length;
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    window.dimensionalEngine = new DimensionalEngine();
+});
+</script>
+</body>
+</html>'''
+
+with open('/mnt/agents/output/mohd_valeed_homepage.html', 'w', encoding='utf-8') as f:
+    f.write(html_code)
+
+print("File saved successfully!")
+print(f"File size: {len(html_code):,} characters")

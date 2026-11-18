@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+           
+        }
+        .question h2 {
+            margin-top: 0;
+        }
+        .question ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .question li {
+            margin-bottom: 10px;
+        }
+        .next {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .next:hover{
+            background-color: black;
+        }
+        .next:active{
+            background-color:chocolate
+        }
+        .result {
+            margin-top: 20px;
+        }
+        footer{
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+		<h1>Quiz Website</h1>
+	</header>
+	<main>
+		<section class="question">
+			<h2>Question 1</h2>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor nihil in, est ipsum provident aut quas labore fugiat quidem. Vitae doloremque sed consectetur nam omnis rerum fugiat error recusandae quas! </p>
+			<ul>
+				<li><input type="radio" name="answer1" id="a1">Answer 1</li>
+				<li><input type="radio" name="answer1" id="a2">Answer 2</li>
+				<li><input type="radio" name="answer1" id="a3">Answer 3</li>
+				<li><input type="radio" name="answer1" id="a4">Answer 4</li>
+			</ul>
+			<button class="next">Next</button>
+		</section>
+		<section class="question">
+			<h2>Question 2</h2>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat natus eum mollitia accusamus quia autem tempore aut. Officiis, similique molestiae, laudantium laborum dolore accusantium rerum, iusto placeat esse animi architecto?</p>
+			<ul>
+				<li><input type="radio" name="answer2" id="b1">Answer 1</li>
+				<li><input type="radio" name="answer2" id="b2">Answer 2</li>
+				<li><input type="radio" name="answer2" id="b3">Answer 3</li>
+				<li><input type="radio" name="answer2" id="b4">Answer 4</li>
+			</ul>
+			<button class="next">Next</button>
+		</section>
+		<section class="result">
+			<h2>Result</h2>
+			<p>Your score is: <span id="score">0</span>/10</p>
+		</section>
+	</main>
+	<footer>
+		<p>&copy; 2024 Quiz Website</p>
+	</footer>
+</body>
+</html>

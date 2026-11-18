@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS CDN (For quick testing) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+<body class="flex justify-center items-center h-screen bg-gray-100">
+    <div class="relative w-4/5 max-w-xl overflow-hidden rounded-lg shadow-lg">
+        <div class="flex transition-transform duration-500 ease-in-out" id="slides">
+            <img src="image.jpg" alt="Image 1" class="w-full flex-shrink-0">
+            <img src="images.jpeg" alt="Image 2" class="w-full flex-shrink-0">
+            <img src="images123.jpeg" alt="Image 3" class="w-full flex-shrink-0">
+        </div>
+        <div class="absolute inset-0 flex items-center justify-between px-4">
+            <button id="prev" class="bg-black bg-opacity-50 text-white text-lg p-2 rounded-full hover:bg-opacity-75">
+                &#10094;
+            </button>
+            <button id="next" class="bg-black bg-opacity-50 text-white text-lg p-2 rounded-full hover:bg-opacity-75">
+                &#10095;
+            </button>
+        </div>
+        <!-- <div class="swiper-button-prev flex items-center justify-center w-12 h-12 bg-black/50 text-white rounded-full absolute top-1/2 -translate-y-1/2 -left-4 shadow-md hover:bg-black/70 transform transition-transform hover:scale-110 relative">
+            <span class="absolute inset-0 flex items-center justify-center text-lg font-semibold" style="line-height: 3rem;">←</span>
+        </div>
+        <div class="swiper-button-next flex items-center justify-center w-12 h-12 bg-black/50 text-white rounded-full absolute top-1/2 -translate-y-1/2 -right-4 shadow-md hover:bg-black/70 transform transition-transform hover:scale-110 relative">
+            <span class="absolute inset-0 flex items-center justify-center text-lg font-semibold" style="line-height: 3rem;">→</span>
+        </div> -->
+    </div>
+</body>
+</html>

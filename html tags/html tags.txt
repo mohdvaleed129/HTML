@@ -1,0 +1,21 @@
+    <b></b>   --used to bold the text
+    <u></u>   --used to underline the text
+    <i></i>   --used to italic the text
+    <hr>      
+    <sub></sub>   --used to subscript the text
+    <sup></sup>   --used to superscript the text
+    <pre></pre>   --give spaces in between text 
+    <header></header>   --
+    <main></main>
+    <footer></footer>
+    <section></section>
+    <article></article>
+    <aside></aside>
+    <a></a>   --used to give link in text(anchor tag) 
+    <div></div>   --non-semantic tag
+    <span></span>   --non-semantic tag
+    <ul></ul>   --unordered list
+    <ol></ol>   --ordered list 
+    <p><p/>    --write a paragraph
+    <title><title/>   --give title to web 
+    
